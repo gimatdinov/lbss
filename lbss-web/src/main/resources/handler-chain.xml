@@ -5,7 +5,7 @@
 	<handler-chain>
 		<handler>
 			<handler-name>SignHandler</handler-name>
-			<handler-class>ru.otr.lbss.ws.SignHandler</handler-class>
+			<handler-class>ru.otr.lbss.web.ws.SignHandler</handler-class>
 		</handler>
 	</handler-chain>
 </handler-chains>

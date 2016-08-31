@@ -6,16 +6,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import cxc.jex.common.application.config.ConfigService;
+import cxc.jex.common.application.config.PropertiesService;
 import ru.otr.lbss.client.api.SmevPrimeServiceLocal;
 import ru.otr.lbss.service.SmevFTPService;
 import ru.otr.lbss.service.SmevSignService;
 
-public class LbssModeService {
-	private static Logger log = LoggerFactory.getLogger(LbssModeService.class);
+public class ModeService {
+	private static Logger log = LoggerFactory.getLogger(ModeService.class);
 
 	@Autowired
-	private ConfigService configService;
+	private PropertiesService propertiesService;
 
 	private SmevPrimeServiceLocal.Mode primeServiceMode;
 	private SmevSignService.Mode signServiceMode;
@@ -27,13 +27,13 @@ public class LbssModeService {
 		try {
 
 			primeServiceMode = SmevPrimeServiceLocal.Mode
-			        .valueOf(configService.getString(LbssConfig.PrimeService_mode, SmevPrimeServiceLocal.Mode.LIVE.toString()));
+			        .valueOf(propertiesService.getString(ServiceProperties.PrimeService_mode, SmevPrimeServiceLocal.Mode.LIVE.toString()));
 			log.info("PrimeServiceMode : " + primeServiceMode.toString());
 
-			signServiceMode = SmevSignService.Mode.valueOf(configService.getString(LbssConfig.SignService_mode, SmevSignService.Mode.STUB.toString()));
+			signServiceMode = SmevSignService.Mode.valueOf(propertiesService.getString(ServiceProperties.SignService_mode, SmevSignService.Mode.STUB.toString()));
 			log.info("SignServiceMode : " + signServiceMode.toString());
 
-			ftpServiceMode = SmevFTPService.Mode.valueOf(configService.getString(LbssConfig.FTPService_mode, SmevFTPService.Mode.MOVE.toString()));
+			ftpServiceMode = SmevFTPService.Mode.valueOf(propertiesService.getString(ServiceProperties.FTPService_mode, SmevFTPService.Mode.MOVE.toString()));
 			log.info("FTPServiceMode : " + ftpServiceMode.toString());
 
 		} catch (Exception e) {

@@ -1,4 +1,4 @@
-package ru.otr.lbss.ws.validation;
+package ru.otr.lbss.web.ws.validation;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

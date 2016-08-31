@@ -12,7 +12,7 @@ import ru.otr.lbss.client.api.*;
 import ru.otr.lbss.client.model.types.*;
 import ru.otr.lbss.client.model.types.basic.InteractionStatusType;
 import ru.otr.lbss.client.model.types.basic.Void;
-import ru.otr.lbss.service.config.LbssModeService;
+import ru.otr.lbss.service.config.ModeService;
 import ru.otr.lbss.service.model.types.RequestRoutingData;
 import ru.otr.lbss.service.model.types.ResponseRoutingData;
 import ru.otr.lbss.service.model.types.SmevMember;
@@ -21,7 +21,7 @@ public class SmevPrimeService implements SmevPrimeServiceLocal {
 	private static Logger log = LoggerFactory.getLogger(SmevPrimeService.class);
 
 	@Autowired
-	private LbssModeService modeService;
+	private ModeService modeService;
 	@Autowired
 	private SmevValidationService validationService;
 	@Autowired

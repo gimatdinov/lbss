@@ -1,6 +1,6 @@
 package cxc.jex.common.application.config;
 
-public interface ConfigService {
+public interface PropertiesService {
 
 	String getString(String key);
 

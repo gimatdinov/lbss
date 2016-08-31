@@ -1,4 +1,4 @@
-package ru.otr.lbss.ws;
+package ru.otr.lbss.web.ws;
 
 import javax.jws.HandlerChain;
 import javax.jws.WebMethod;

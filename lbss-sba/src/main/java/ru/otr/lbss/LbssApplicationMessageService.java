@@ -14,10 +14,10 @@ import cxc.jex.common.application.message.ApplicationMessageSource;
 import cxc.jex.common.exception.ExceptionWrapper;
 import cxc.jex.common.failure.FailureWrapper;
 
-public class LbssApplicationMessageService implements ApplicationMessageService{
+public class LbssApplicationMessageService implements ApplicationMessageService {
     private static Logger log = LoggerFactory.getLogger(ApplicationMessageService.class);
 
-    private static final String PROPERTIES_FILE = "/LbssApplicationMessageService.properties";
+    private static final String PROPERTIES_FILE = "/application-messages.properties";
     private Properties messages;
 
     @PostConstruct

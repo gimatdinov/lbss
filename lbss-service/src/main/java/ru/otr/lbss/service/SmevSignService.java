@@ -15,7 +15,7 @@ import com.otr.sufd.smev30supportservice.SignXmlParams;
 import com.otr.sufd.smev30supportservice.Smev30SupportService;
 import com.otr.sufd.smev30supportservice.Smev30SupportServicePortType;
 
-import cxc.jex.common.application.config.ConfigService;
+import cxc.jex.common.application.config.PropertiesService;
 import cxc.jex.common.application.message.ApplicationMessageService;
 import cxc.jex.common.exception.ExceptionWrapper;
 import cxc.jex.common.xml.dsig.SignatureProtector;
@@ -27,8 +27,8 @@ import ru.otr.lbss.client.model.types.SmevAsyncProcessingMessage;
 import ru.otr.lbss.client.model.types.GetRequestResponse.RequestMessage;
 import ru.otr.lbss.client.model.types.GetResponseResponse.ResponseMessage;
 import ru.otr.lbss.client.model.types.basic.XMLDSigSignatureType;
-import ru.otr.lbss.service.config.LbssConfig;
-import ru.otr.lbss.service.config.LbssModeService;
+import ru.otr.lbss.service.config.ServiceProperties;
+import ru.otr.lbss.service.config.ModeService;
 
 public class SmevSignService {
 	public static enum Mode {
@@ -38,11 +38,11 @@ public class SmevSignService {
 	private static Logger log = LoggerFactory.getLogger(SmevSignService.class);
 
 	@Autowired
-	private LbssModeService modeService;
+	private ModeService modeService;
 	@Autowired
 	private ApplicationMessageService applMsgService;
 	@Autowired
-	private ConfigService configService;
+	private PropertiesService propertiesService;
 	@Autowired
 	private JAXBTransformer transformer;
 
@@ -59,7 +59,7 @@ public class SmevSignService {
 
 			if (getMode() == Mode.ENABLE) {
 				cryptoWebServicePort = cryptoWebService.getSmev30SupportServicePort();
-				String cryptoWebServiceURI = configService.getString(LbssConfig.SignService_cryptoWebServiceURI);
+				String cryptoWebServiceURI = propertiesService.getString(ServiceProperties.SignService_cryptoWebServiceURI);
 				log.info("CryptoWebService URI : " + cryptoWebServiceURI);
 				BindingProvider provider = (BindingProvider) cryptoWebServicePort;
 				provider.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, cryptoWebServiceURI);
