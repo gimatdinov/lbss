@@ -20,15 +20,15 @@ import cxc.jex.common.application.message.ApplicationMessageService;
 import cxc.jex.common.exception.ExceptionWrapper;
 import cxc.jex.common.xml.dsig.SignatureProtector;
 import cxc.jex.common.xml.transform.JAXBTransformer;
-import ru.otr.lbss.service.api.SmevPrimeServiceLocal;
+import ru.otr.lbss.client.api.SmevPrimeServiceLocal;
+import ru.otr.lbss.client.model.types.SendRequestResponse;
+import ru.otr.lbss.client.model.types.SendResponseResponse;
+import ru.otr.lbss.client.model.types.SmevAsyncProcessingMessage;
+import ru.otr.lbss.client.model.types.GetRequestResponse.RequestMessage;
+import ru.otr.lbss.client.model.types.GetResponseResponse.ResponseMessage;
+import ru.otr.lbss.client.model.types.basic.XMLDSigSignatureType;
 import ru.otr.lbss.service.config.LbssConfig;
 import ru.otr.lbss.service.config.LbssModeService;
-import ru.otr.lbss.ws.api.types.GetRequestResponse.RequestMessage;
-import ru.otr.lbss.ws.api.types.GetResponseResponse.ResponseMessage;
-import ru.otr.lbss.ws.api.types.SendRequestResponse;
-import ru.otr.lbss.ws.api.types.SendResponseResponse;
-import ru.otr.lbss.ws.api.types.SmevAsyncProcessingMessage;
-import ru.otr.lbss.ws.api.types.basic.XMLDSigSignatureType;
 
 public class SmevSignService {
 	public static enum Mode {

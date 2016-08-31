@@ -21,16 +21,16 @@ import cxc.jex.common.exception.ExceptionWrapper;
 import cxc.jex.common.failure.FailureWrapper;
 import cxc.jex.common.xml.dsig.CertificateHelper;
 import cxc.jex.common.xml.dsig.SignatureProtector;
-import ru.otr.lbss.model.DocNames;
-import ru.otr.lbss.model.MpcKey;
-import ru.otr.lbss.model.SmevMember;
-import ru.otr.lbss.model.mongodb.LbssDBProvider;
+import ru.otr.lbss.service.model.DocNames;
+import ru.otr.lbss.service.model.DBProvider;
+import ru.otr.lbss.service.model.types.MpcKey;
+import ru.otr.lbss.service.model.types.SmevMember;
 
 public class SmevMemberService {
 	private static Logger log = LoggerFactory.getLogger(SmevMemberService.class);
 
 	@Autowired
-	private LbssDBProvider dbProvider;
+	private DBProvider dbProvider;
 	@Autowired
 	private SmevFTPService ftpService;
 

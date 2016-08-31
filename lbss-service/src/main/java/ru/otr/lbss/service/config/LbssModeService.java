@@ -7,9 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import cxc.jex.common.application.config.ConfigService;
+import ru.otr.lbss.client.api.SmevPrimeServiceLocal;
 import ru.otr.lbss.service.SmevFTPService;
 import ru.otr.lbss.service.SmevSignService;
-import ru.otr.lbss.service.api.SmevPrimeServiceLocal;
 
 public class LbssModeService {
 	private static Logger log = LoggerFactory.getLogger(LbssModeService.class);

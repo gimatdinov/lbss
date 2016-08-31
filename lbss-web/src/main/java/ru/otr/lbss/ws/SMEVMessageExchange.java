@@ -13,18 +13,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import cxc.jex.common.failure.FailureWrapper;
-import ru.otr.lbss.service.api.SmevPrimeServiceLocal;
-import ru.otr.lbss.ws.api.Namespaces;
-import ru.otr.lbss.ws.api.exceptions.*;
-import ru.otr.lbss.ws.api.types.*;
-import ru.otr.lbss.ws.api.types.basic.Void;
+import ru.otr.lbss.client.api.SmevPrimeServiceLocal;
+import ru.otr.lbss.client.model.Namespaces;
+import ru.otr.lbss.client.model.exceptions.*;
+import ru.otr.lbss.client.model.types.*;
+import ru.otr.lbss.client.model.types.basic.Void;
 
 
 @WebService(name = "SMEVMessageExchangeService", targetNamespace = Namespaces.SERVICE)
 @HandlerChain(file = "/handler-chain.xml")
 @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
-@XmlSeeAlso({ ru.otr.lbss.ws.api.types.ObjectFactory.class, ru.otr.lbss.ws.api.types.fault.ObjectFactory.class,
-        ru.otr.lbss.ws.api.types.basic.ObjectFactory.class })
+@XmlSeeAlso({ ru.otr.lbss.client.model.types.ObjectFactory.class, ru.otr.lbss.client.model.types.fault.ObjectFactory.class,
+        ru.otr.lbss.client.model.types.basic.ObjectFactory.class })
 public class SMEVMessageExchange {
 	private static Logger log = LoggerFactory.getLogger(SMEVMessageExchange.class);
 

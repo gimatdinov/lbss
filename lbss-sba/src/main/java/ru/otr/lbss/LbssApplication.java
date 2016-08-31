@@ -20,17 +20,17 @@ import cxc.jex.common.application.config.ConfigService;
 import cxc.jex.common.application.message.ApplicationMessageService;
 import cxc.jex.common.exception.ExceptionWrapper;
 import cxc.jex.common.xml.transform.JAXBTransformer;
-import ru.otr.lbss.model.mongodb.LbssDBProvider;
+import ru.otr.lbss.client.api.SmevPrimeServiceLocal;
 import ru.otr.lbss.service.SmevFTPService;
 import ru.otr.lbss.service.SmevMemberService;
 import ru.otr.lbss.service.SmevPrimeService;
 import ru.otr.lbss.service.SmevProcessingService;
 import ru.otr.lbss.service.SmevSignService;
 import ru.otr.lbss.service.SmevValidationService;
-import ru.otr.lbss.service.api.SmevPrimeServiceLocal;
 import ru.otr.lbss.service.config.LbssConfig;
 import ru.otr.lbss.service.config.LbssConfigService;
 import ru.otr.lbss.service.config.LbssModeService;
+import ru.otr.lbss.service.model.DBProvider;
 import ru.otr.lbss.ws.SMEVMessageExchange;
 
 @SpringBootApplication
@@ -79,8 +79,8 @@ public class LbssApplication {
 	};
 
 	@Bean
-	LbssDBProvider getDBProvider() {
-		return new LbssDBProvider();
+	DBProvider getDBProvider() {
+		return new DBProvider();
 	};
 
 	@Bean

@@ -21,18 +21,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import cxc.jex.common.application.config.ConfigService;
 import cxc.jex.common.exception.ExceptionWrapper;
 import cxc.jex.common.failure.FailureWrapper;
-import ru.otr.lbss.model.DocNames;
-import ru.otr.lbss.model.SmevMember;
+import ru.otr.lbss.client.model.types.GetRequestResponse.RequestMessage;
+import ru.otr.lbss.client.model.types.GetResponseResponse.ResponseMessage;
+import ru.otr.lbss.client.model.types.basic.FSAttachmentsList;
+import ru.otr.lbss.client.model.types.basic.FSAuthInfo;
+import ru.otr.lbss.client.model.types.basic.RefAttachmentHeaderList;
+import ru.otr.lbss.client.model.types.basic.RefAttachmentHeaderType;
 import ru.otr.lbss.service.config.LbssConfig;
 import ru.otr.lbss.service.config.LbssModeService;
 import ru.otr.lbss.service.ftp.FTPListener;
 import ru.otr.lbss.service.ftp.FTPUserManager;
-import ru.otr.lbss.ws.api.types.GetRequestResponse.RequestMessage;
-import ru.otr.lbss.ws.api.types.GetResponseResponse.ResponseMessage;
-import ru.otr.lbss.ws.api.types.basic.FSAttachmentsList;
-import ru.otr.lbss.ws.api.types.basic.FSAuthInfo;
-import ru.otr.lbss.ws.api.types.basic.RefAttachmentHeaderList;
-import ru.otr.lbss.ws.api.types.basic.RefAttachmentHeaderType;
+import ru.otr.lbss.service.model.DocNames;
+import ru.otr.lbss.service.model.types.SmevMember;
 
 public class SmevFTPService {
 	public static enum Mode {

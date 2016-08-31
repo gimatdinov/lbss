@@ -8,15 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import cxc.jex.common.exception.ExceptionWrapper;
 import cxc.jex.common.failure.FailureWrapper;
-
-import ru.otr.lbss.model.RequestRoutingData;
-import ru.otr.lbss.model.ResponseRoutingData;
-import ru.otr.lbss.model.SmevMember;
-import ru.otr.lbss.service.api.*;
+import ru.otr.lbss.client.api.*;
+import ru.otr.lbss.client.model.types.*;
+import ru.otr.lbss.client.model.types.basic.InteractionStatusType;
+import ru.otr.lbss.client.model.types.basic.Void;
 import ru.otr.lbss.service.config.LbssModeService;
-import ru.otr.lbss.ws.api.types.*;
-import ru.otr.lbss.ws.api.types.basic.InteractionStatusType;
-import ru.otr.lbss.ws.api.types.basic.Void;
+import ru.otr.lbss.service.model.types.RequestRoutingData;
+import ru.otr.lbss.service.model.types.ResponseRoutingData;
+import ru.otr.lbss.service.model.types.SmevMember;
 
 public class SmevPrimeService implements SmevPrimeServiceLocal {
 	private static Logger log = LoggerFactory.getLogger(SmevPrimeService.class);
