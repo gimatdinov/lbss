@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import cxc.jex.common.application.config.PropertiesService;
 import ru.otr.lbss.client.api.SmevPrimeServiceLocal;
 import ru.otr.lbss.service.SmevFTPService;
+import ru.otr.lbss.service.SmevMemberService;
 import ru.otr.lbss.service.SmevSignService;
 
 public class ModeService {
@@ -20,6 +21,7 @@ public class ModeService {
 	private SmevPrimeServiceLocal.Mode primeServiceMode;
 	private SmevSignService.Mode signServiceMode;
 	private SmevFTPService.Mode ftpServiceMode;
+	private SmevMemberService.Mode memberServiceMode;
 
 	@PostConstruct
 	private void init() {
@@ -33,8 +35,12 @@ public class ModeService {
 			signServiceMode = SmevSignService.Mode.valueOf(propertiesService.getString(ServiceProperties.SignService_mode, SmevSignService.Mode.STUB.toString()));
 			log.info("SignServiceMode : " + signServiceMode.toString());
 
-			ftpServiceMode = SmevFTPService.Mode.valueOf(propertiesService.getString(ServiceProperties.FTPService_mode, SmevFTPService.Mode.MOVE.toString()));
+			ftpServiceMode = SmevFTPService.Mode.valueOf(propertiesService.getString(ServiceProperties.FTPService_mode, SmevFTPService.Mode.COPY.toString()));
 			log.info("FTPServiceMode : " + ftpServiceMode.toString());
+			
+			memberServiceMode = SmevMemberService.Mode.valueOf(propertiesService.getString(ServiceProperties.MemberService_mode, SmevMemberService.Mode.STUB.toString()));
+			log.info("MemberServiceMode : " + memberServiceMode.toString());
+
 
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -52,5 +58,10 @@ public class ModeService {
 	public SmevFTPService.Mode getFtpServiceMode() {
 		return ftpServiceMode;
 	}
+	
+	public SmevMemberService.Mode getMemberServiceMode() {
+		return memberServiceMode;
+	}
+
 
 }

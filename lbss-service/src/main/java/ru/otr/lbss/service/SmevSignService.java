@@ -70,7 +70,7 @@ public class SmevSignService {
 	}
 
 	public Mode getMode() {
-		if (modeService != null && modeService.getPrimeServiceMode() == SmevPrimeServiceLocal.Mode.LIVE) {
+		if (modeService.getPrimeServiceMode() == SmevPrimeServiceLocal.Mode.LIVE) {
 			return modeService.getSignServiceMode();
 		} else {
 			return Mode.DISABLE;

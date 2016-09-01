@@ -23,96 +23,105 @@ import cxc.jex.common.exception.ExceptionWrapper;
 import cxc.jex.common.failure.FailureWrapper;
 import cxc.jex.common.xml.dsig.CertificateHelper;
 import cxc.jex.common.xml.dsig.SignatureProtector;
+import ru.otr.lbss.service.config.ModeService;
 import ru.otr.lbss.service.model.DocNames;
 import ru.otr.lbss.service.model.types.MpcKey;
 import ru.otr.lbss.service.model.types.SmevMember;
 
 public class SmevMemberService {
-    private static Logger log = LoggerFactory.getLogger(SmevMemberService.class);
+	private static Logger log = LoggerFactory.getLogger(SmevMemberService.class);
 
-    @Autowired
-    @Qualifier("membersDB")
-    private MongoDatabase membersDB;
-    @Autowired
-    private SmevFTPService ftpService;
+	public static enum Mode {
+		LIVE, STUB
+	}
 
-    private SignatureProtector protector;
-    private CertificateHelper certificateHelper;
-    private MessageDigest messageDigest;
+	@Autowired
+	private ModeService modeService;
+	@Autowired
+	@Qualifier("membersDB")
+	private MongoDatabase membersDB;
+	@Autowired
+	private SmevFTPService ftpService;
 
-    @PostConstruct
-    private void init() {
-        log.info("init");
-        try {
-            protector = new SignatureProtector();
-            certificateHelper = new CertificateHelper();
-            messageDigest = MessageDigest.getInstance("MD5");
+	private SignatureProtector protector;
+	private CertificateHelper certificateHelper;
+	private MessageDigest messageDigest;
 
-            // MongoCollection<SmevMember> collection =
-            // mongoService.getMembersDB().getCollection(DocNames.SmevMember,
-            // SmevMember.class);
-            // SmevMember member = new SmevMember("STUB", "Тестовое ведомство");
-            // member.setType(SmevMember.Type.OIV);
-            // member.setFtpUserPassword("STUB");
-            // member.setCertificateHash("STUBCertificateHash");
-            // member.getMpcRegistrationList().add(new
-            // MpcKey("http://test-oiv.ru", "TestRequest"));
-            // member.getMpcRegistrationList().add(new
-            // MpcKey("http://test-oiv.ru", "TestResponse"));
-            // collection.insertOne(member);
+	@PostConstruct
+	private void init() {
+		log.info("init");
+		try {
+			protector = new SignatureProtector();
+			certificateHelper = new CertificateHelper();
+			messageDigest = MessageDigest.getInstance("MD5");
 
-            updateFTPUsers();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+			if (modeService.getMemberServiceMode() == Mode.STUB) {
+				MongoCollection<SmevMember> collection = membersDB.getCollection(DocNames.SmevMember, SmevMember.class);
+				SmevMember member = new SmevMember("STUB", "Тестовое ведомство");
+				member.setFtpUserPassword("STUB");
+				member.setCertificateHash(md5("STUB".getBytes()));
+				member.setType(SmevMember.Type.OIV);
+				collection.insertOne(member);
+			}
 
-    @PreDestroy
-    private void fina() {
-        log.info("fina");
-    }
+			updateFTPUsers();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 
-    private String md5(byte[] data) {
-        BigInteger bigInt = new BigInteger(1, messageDigest.digest(data));
-        String result = bigInt.toString(16);
-        while (result.length() < 32) {
-            result = "0" + result;
-        }
-        return result;
-    }
+	@PreDestroy
+	private void fina() {
+		log.info("fina");
+	}
 
-    private void updateFTPUsers() throws ExceptionWrapper {
-        MongoCollection<SmevMember> collection = membersDB.getCollection(DocNames.SmevMember, SmevMember.class);
-        MongoCursor<SmevMember> cursor = collection.find().iterator();
-        while (cursor.hasNext()) {
-            ftpService.saveUser(cursor.next());
-        }
-    }
+	private String md5(byte[] data) {
+		BigInteger bigInt = new BigInteger(1, messageDigest.digest(data));
+		String result = bigInt.toString(16);
+		while (result.length() < 32) {
+			result = "0" + result;
+		}
+		return result;
+	}
 
-    public SmevMember findMember(String mnemonic) {
-        MongoCollection<SmevMember> collection = membersDB.getCollection(DocNames.SmevMember, SmevMember.class);
-        return collection.find(eq("Mnemonic", mnemonic)).first();
-    }
+	private void updateFTPUsers() throws ExceptionWrapper {
+		MongoCollection<SmevMember> collection = membersDB.getCollection(DocNames.SmevMember, SmevMember.class);
+		MongoCursor<SmevMember> cursor = collection.find().iterator();
+		while (cursor.hasNext()) {
+			ftpService.saveUser(cursor.next());
+		}
+	}
 
-    public SmevMember findMember(Node packedSignature) throws FailureWrapper {
-        try {
-            Document signature = protector.unpackSignature(packedSignature);
-            byte[] certificate = certificateHelper.findSingleCertificate(signature);
-            String certificateHash = md5(certificate);
-            log.info("findMember : certificateHash=" + certificateHash);
-            MongoCollection<SmevMember> collection = membersDB.getCollection(DocNames.SmevMember, SmevMember.class);
-            return collection.find(eq("CertificateHash", certificateHash)).first();
-        } catch (ExceptionWrapper e) {
-            throw new FailureWrapper("SMEV.SignatureVerificationFault");
-        }
-    }
+	public SmevMember findMember(String mnemonic) {
+		MongoCollection<SmevMember> collection = membersDB.getCollection(DocNames.SmevMember, SmevMember.class);
+		return collection.find(eq("Mnemonic", mnemonic)).first();
+	}
 
-    public SmevMember findMember(MpcKey mpcKey) {
-        log.info("findMember : " + mpcKey);
-        MongoCollection<SmevMember> collection = membersDB.getCollection(DocNames.SmevMember, SmevMember.class);
-        org.bson.Document fields = new org.bson.Document("$elemMatch", mpcKey.toDocument());
-        org.bson.Document filter = new org.bson.Document("MpcRegistrationList", fields);
-        return collection.find(filter).first();
-    }
+	public SmevMember findMember(Node packedSignature) throws FailureWrapper {
+		if (modeService.getMemberServiceMode() == Mode.STUB) {
+			return findMember("STUB");
+		}
+		try {
+			Document signature = protector.unpackSignature(packedSignature);
+			byte[] certificate = certificateHelper.findSingleCertificate(signature);
+			String certificateHash = md5(certificate);
+			log.info("findMember : certificateHash=" + certificateHash);
+			MongoCollection<SmevMember> collection = membersDB.getCollection(DocNames.SmevMember, SmevMember.class);
+			return collection.find(eq("CertificateHash", certificateHash)).first();
+		} catch (ExceptionWrapper e) {
+			throw new FailureWrapper("SMEV.SignatureVerificationFault");
+		}
+	}
+
+	public SmevMember findMember(MpcKey mpcKey) {
+		if (modeService.getMemberServiceMode() == Mode.STUB) {
+			return findMember("STUB");
+		}
+		log.info("findMember : " + mpcKey);
+		MongoCollection<SmevMember> collection = membersDB.getCollection(DocNames.SmevMember, SmevMember.class);
+		org.bson.Document fields = new org.bson.Document("$elemMatch", mpcKey.toDocument());
+		org.bson.Document filter = new org.bson.Document("MpcRegistrationList", fields);
+		return collection.find(filter).first();
+	}
 
 }
