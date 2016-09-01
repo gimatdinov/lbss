@@ -1,0 +1,22 @@
+version: '2'
+
+services:
+
+ lbss:
+  image: gimatdinov/lbss-sba
+  ports:
+     - 8080:8080
+     - 2121:2121
+  volumes:
+    - lbssFtpVol:/data/lbss-ftp
+
+ lbss-db:
+  image: mongo:3.2.9
+  ports:
+     - 27017:27017
+  volumes:
+    - lbssDbVol:/data/db mongo:3.2.9
+
+volumes:
+ lbssDbVol:
+ lbssFtpVol:
