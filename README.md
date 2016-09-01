@@ -1,13 +1,11 @@
 # LBSS - (L)oop(B)ack(S)mev(S)tub
 
 Сборка:
-``mvn package``
+``mvn -P pack package``
 
 Контейнеризация:
-``docker build -t gimatdinov/lbss .``
+``mvn -P dock docker:build``
 
-Запуск базы данных:
-``docker run --name lbss-db --rm -v /data/lbss-db:/data/db mongo:3.2.9``
+Запуск:
+``docker-compose up -d``
 
-Запуск эмулятора:
-``docker run --name lbss --rm --link lbss-db:mongo -v /data/lbss-ftp:/data/lbss-ftp gimatdinov/lbss``

@@ -1,5 +1,6 @@
 package ru.otr.lbss;
 
+import org.jolokia.http.AgentServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
@@ -32,14 +34,21 @@ public class LbssApplication {
     Environment environment;
 
     @Bean
-    PropertiesService getPropertiesService() {
+    PropertiesService propertiesService() {
         return new LbssPropertiesService(environment);
     }
 
     @Bean
-    ApplicationMessageService getApplicationMessageService() {
+    ApplicationMessageService applicationMessageService() {
         return new LbssApplicationMessageService();
 
+    }
+
+    @Bean
+    public ServletRegistrationBean jolokiaServletRegistrationBean() {
+        ServletRegistrationBean registration = new ServletRegistrationBean(new AgentServlet(), "/jolokia/*");
+        registration.setName("JolokiaAgent");
+        return registration;
     }
 
 }
