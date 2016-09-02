@@ -129,7 +129,7 @@ public class RequestMessageCodec implements CollectibleCodec<RequestMessage> {
 	@Override
 	public BsonValue getDocumentId(RequestMessage requestMessage) {
 		if (!documentHasId(requestMessage)) {
-			throw new IllegalStateException("The document does not contain an " + FieldNames.docId);
+			throw new IllegalStateException("The RequestMessage does not contain an 'docId'.");
 		}
 		return new BsonString(requestMessage.getDocId().toString());
 	}

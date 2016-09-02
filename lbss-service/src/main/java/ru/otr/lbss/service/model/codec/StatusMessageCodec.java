@@ -115,7 +115,7 @@ public class StatusMessageCodec implements CollectibleCodec<SmevAsyncProcessingM
 	@Override
 	public BsonValue getDocumentId(SmevAsyncProcessingMessage statusMessage) {
 		if (!documentHasId(statusMessage)) {
-			throw new IllegalStateException("The document does not contain an " + FieldNames.docId);
+			throw new IllegalStateException("The StatusMessage does not contain an 'docId'.");
 		}
 		return new BsonString(statusMessage.getDocId().toString());
 	}

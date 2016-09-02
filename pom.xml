@@ -1,5 +1,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	<name>LBSS</name>
+	<url>https://github.com/gimatdinov/lbss</url>
+	<description>(L)oop(B)ack(S)mev(S)tub</description>
 	<groupId>ru.otr.lbss</groupId>
 	<artifactId>lbss</artifactId>
 	<version>0.6.1-SNAPSHOT</version>
@@ -16,74 +19,47 @@
 		<version>1.4.0.RELEASE</version>
 	</parent>
 
-	<profiles>
-		<profile>
-			<id>pack</id>
-			<modules>
-				<module>lbss-util</module>
-				<module>lbss-client</module>
-				<module>lbss-service</module>
-				<module>lbss-web</module>
-				<module>lbss-sba</module>
-			</modules>
-			<dependencyManagement>
-				<dependencies>
-					<dependency>
-						<groupId>ru.otr.lbss</groupId>
-						<artifactId>lbss-util</artifactId>
-						<version>${project.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>ru.otr.lbss</groupId>
-						<artifactId>lbss-client</artifactId>
-						<version>${project.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>ru.otr.lbss</groupId>
-						<artifactId>lbss-service</artifactId>
-						<version>${project.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>ru.otr.lbss</groupId>
-						<artifactId>lbss-web</artifactId>
-						<version>${project.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>ru.otr.lbss</groupId>
-						<artifactId>lbss-sba</artifactId>
-						<version>${project.version}</version>
-					</dependency>
-				</dependencies>
-			</dependencyManagement>
-		</profile>
-		<profile>
-			<id>dock</id>
-			<modules>
-			</modules>
-			<build>
-				<pluginManagement>
-					<plugins>
-						<plugin>
-							<groupId>com.spotify</groupId>
-							<artifactId>docker-maven-plugin</artifactId>
-							<version>0.4.10</version>
-							<configuration>
-								<imageName>${docker.image.prefix}/${project.artifactId}</imageName>
-								<dockerDirectory>${project.basedir}/src/main/docker</dockerDirectory>
-								<resources>
-									<resource>
-										<targetPath>/</targetPath>
-										<directory>lbss-sba/target</directory>
-										<include>lbss-sba-*.jar</include>
-									</resource>
-								</resources>
-							</configuration>
-						</plugin>
-					</plugins>
-				</pluginManagement>
-			</build>
-		</profile>
-	</profiles>
-
+	<modules>
+		<module>lbss-util</module>
+		<module>lbss-client</module>
+		<module>lbss-service</module>
+		<module>lbss-web</module>
+		<module>lbss-sba</module>
+		<module>lbss-db</module>
+	</modules>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>ru.otr.lbss</groupId>
+				<artifactId>lbss-util</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>ru.otr.lbss</groupId>
+				<artifactId>lbss-client</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>ru.otr.lbss</groupId>
+				<artifactId>lbss-service</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>ru.otr.lbss</groupId>
+				<artifactId>lbss-web</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>ru.otr.lbss</groupId>
+				<artifactId>lbss-sba</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>ru.otr.lbss</groupId>
+				<artifactId>lbss-db</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 </project>
