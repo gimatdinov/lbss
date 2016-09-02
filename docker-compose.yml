@@ -13,6 +13,9 @@ services:
         image: gimatdinov/lbss-db
         ports:
             - 27017:27017
-
+        volumes:
+            - lbssDB:/data/db
+            
 volumes:
     lbssFTP:
+    lbssDB:
