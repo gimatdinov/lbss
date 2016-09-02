@@ -26,6 +26,7 @@ public class FTPUserCodec implements CollectibleCodec<FTPUser> {
     public void encode(BsonWriter writer, FTPUser user, EncoderContext encoderContext) {
         Document doc = new Document();
         doc.append("_id", user.getName());
+        doc.append("Name", user.getName());
         doc.append("Password", user.getPassword());
         doc.append("Folder", user.getFolder());
         doc.append("WritePermission", user.isWritePermission());
@@ -36,7 +37,7 @@ public class FTPUserCodec implements CollectibleCodec<FTPUser> {
     @Override
     public FTPUser decode(BsonReader reader, DecoderContext decoderContext) {
         Document doc = documentCodec.decode(reader, decoderContext);
-        FTPUser user = new FTPUser(doc.getString("_id"), doc.getString("Password"), ftpDirectory, doc.getString("Folder"),
+        FTPUser user = new FTPUser(doc.getString("Name"), doc.getString("Password"), ftpDirectory, doc.getString("Folder"),
                 doc.getBoolean("WritePermission", false));
         user.setEnabled(doc.getBoolean("Enabled", true));
         return user;
