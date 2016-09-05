@@ -1,3 +1,194 @@
-{"_id":"FSVP","Mnemonic":"FSVP","CertificateHash":"e57e05f212f2c72aa0ca648f16eb1e88","FtpUserPassword":"FSVP","HumanReadableName":"Россельхознадзор","MpcRegistrationList":[{"namespace":"http://sample.otr.com/RSKHNDebtorInfo/3.0.3","rootElement":"rskhnDebtorInfoAppDataRequest"},{"namespace":"http://sample.otr.com/RSKHNDebtorInfo/3.0.3","rootElement":"rskhnDebtorInfoAppDataResponse"},{"namespace":"http://sample.otr.com/RSHNEPGU/LicensingPharmaceuticalActivities/3.0.0","rootElement":"RequestData"},{"namespace":"http://sample.otr.com/RSHNEPGU/LicensingPharmaceuticalActivities/3.0.0","rootElement":"ResponseData"}],"Type":"OIV"}
-{"_id":"EPGU","Mnemonic":"EPGU","CertificateHash":"45743c93cd60544c12c78e264c7bf264","FtpUserPassword":"EPGU","HumanReadableName":"ЕПГУ","MpcRegistrationList":[{"namespace":"http://epgu.gosuslugi.ru/lk/order/event/PROD/3.1.0","rootElement":"eventServiceRequest"},{"namespace":"http://epgu.gosuslugi.ru/lk/order/event/PROD/3.1.0","rootElement":"eventServiceResponse"}],"Type":"PGU"}
-{"_id":"FNSR","Mnemonic":"FNSR","CertificateHash":"58fa1160a42ff3a97da4af269c2f9b63","FtpUserPassword":"FNSR","HumanReadableName":"ФНС России","MpcRegistrationList":[{"namespace":"urn://x-artefacts-fns-SRCHIS/082-2/4.0.1","rootElement":"RequestDocument"},{"namespace":"urn://x-artefacts-fns-SRCHIS/082-2/4.0.1","rootElement":"ResponseDocument"},{"namespace":"urn://x-artefacts-fns-sprispnp/root/085-09/4.1.0","rootElement":"SPRISPNPRequest"},{"namespace":"urn://x-artefacts-fns-sprispnp/root/085-09/4.1.0","rootElement":"SPRISPNPResponse"},{"namespace":"urn://x-artefacts-fns-faktupnal/root/085-01/4.0.0","rootElement":"FAKTUPNALRequest"},{"namespace":"urn://x-artefacts-fns-faktupnal/root/085-01/4.0.0","rootElement":"FAKTUPNALResponse"}],"Type":"OIV"}
+{
+    "CertificateHash": "e57e05f212f2c72aa0ca648f16eb1e88",
+    "FtpUserPassword": "FSVP",
+    "HumanReadableName": "Россельхознадзор",
+    "Mnemonic": "FSVP",
+    "MpcRegistrationList": [
+        {
+            "namespace": "http://sample.otr.com/RSKHNResolution/3.0.0",
+            "rootElement": "rskhnResolutionAppDataRequest"
+        },
+        {
+            "namespace": "http://sample.otr.com/RSKHNResolution/3.0.0",
+            "rootElement": "rskhnResolutionAppDataResponse"
+        },
+        {
+            "namespace": "http://sample.otr.com/RSKHNDebtorInfo/3.0.3",
+            "rootElement": "rskhnDebtorInfoAppDataRequest"
+        },
+        {
+            "namespace": "http://sample.otr.com/RSKHNDebtorInfo/3.0.3",
+            "rootElement": "rskhnDebtorInfoAppDataResponse"
+        },
+        {
+            "namespace": "http://sample.otr.com/RSHNEPGU/FeedAdditivesRegistration/3.0.0",
+            "rootElement": "RequestData"
+        },
+        {
+            "namespace": "http://sample.otr.com/RSHNEPGU/FeedAdditivesRegistration/3.0.0",
+            "rootElement": "ResponseData"
+        },
+        {
+            "namespace": "http://sample.otr.com/RSHNEPGU/LicensingPharmaceuticalActivities/3.0.1",
+            "rootElement": "RequestData"
+        },
+        {
+            "namespace": "http://sample.otr.com/RSHNEPGU/LicensingPharmaceuticalActivities/3.0.1",
+            "rootElement": "ResponseData"
+        },
+        {
+            "namespace": "http://sample.otr.com/RSHNEPGU/LicensingProductionOfMedications/3.0.1",
+            "rootElement": "RequestData"
+        },
+        {
+            "namespace": "http://sample.otr.com/RSHNEPGU/LicensingProductionOfMedications/3.0.1",
+            "rootElement": "ResponseData"
+        },
+        {
+            "namespace": "http://sample.otr.com/RSHNEPGU/RegistrationForagesGMO/3.0.1",
+            "rootElement": "RequestData"
+        },
+        {
+            "namespace": "http://sample.otr.com/RSHNEPGU/RegistrationForagesGMO/3.0.1",
+            "rootElement": "ResponseData"
+        },
+        {
+            "namespace": "http://sample.otr.com/RSHNEPGU/RegistrationMedications/3.0.1",
+            "rootElement": "RequestData"
+        },
+        {
+            "namespace": "http://sample.otr.com/RSHNEPGU/RegistrationMedications/3.0.1",
+            "rootElement": "ResponseData"
+        }
+    ],
+    "Type": "OIV",
+    "_id": "FSVP"
+}
+{
+    "CertificateHash": "45743c93cd60544c12c78e264c7bf264",
+    "FtpUserPassword": "EPGU",
+    "HumanReadableName": "ЕПГУ",
+    "Mnemonic": "EPGU",
+    "MpcRegistrationList": [
+        {
+            "namespace": "http://epgu.gosuslugi.ru/lk/order/event/PROD/3.1.0",
+            "rootElement": "eventServiceRequest"
+        },
+        {
+            "namespace": "http://epgu.gosuslugi.ru/lk/order/event/PROD/3.1.0",
+            "rootElement": "eventServiceResponse"
+        }
+    ],
+    "Type": "PGU",
+    "_id": "EPGU"
+}
+{
+    "CertificateHash": "58fa1160a42ff3a97da4af269c2f9b63",
+    "FtpUserPassword": "FNSR",
+    "HumanReadableName": "ФНС России",
+    "Mnemonic": "FNSR",
+    "MpcRegistrationList": [
+        {
+            "namespace": "urn://x-artefacts-fns-rrmsp/root/213-04/4.0.1",
+            "rootElement": "RRMSPRequest"
+        },
+        {
+            "namespace": "urn://x-artefacts-fns-rrmsp/root/213-04/4.0.1",
+            "rootElement": "RRMSPResponse"
+        },
+        {
+            "namespace": "urn://x-artefacts-fns-SRCHIS/082-2/4.0.1",
+            "rootElement": "RequestDocument"
+        },
+        {
+            "namespace": "urn://x-artefacts-fns-SRCHIS/082-2/4.0.1",
+            "rootElement": "ResponseDocument"
+        },
+        {
+            "namespace": "urn://x-artefacts-fns-sprispnp/root/085-09/4.1.0",
+            "rootElement": "SPRISPNPRequest"
+        },
+        {
+            "namespace": "urn://x-artefacts-fns-sprispnp/root/085-09/4.1.0",
+            "rootElement": "SPRISPNPResponse"
+        },
+        {
+            "namespace": "urn://x-artefacts-fns-faktupnal/root/085-01/4.0.0",
+            "rootElement": "FAKTUPNALRequest"
+        },
+        {
+            "namespace": "urn://x-artefacts-fns-faktupnal/root/085-01/4.0.0",
+            "rootElement": "FAKTUPNALResponse"
+        },
+        {
+            "namespace": "urn://x-artefacts-fns-zadorg/root/548-04/4.0.4",
+            "rootElement": "ZadorgRequest"
+        },
+        {
+            "namespace": "urn://x-artefacts-fns-zadorg/root/548-04/4.0.4",
+            "rootElement": "ZadorgResponse"
+        },
+        {
+            "namespace": "urn://x-artefacts-fns-inn-singular/root/270-18/4.0.1",
+            "rootElement": "FNSINNSingularRequest"
+        },
+        {
+            "namespace": "urn://x-artefacts-fns-inn-singular/root/270-18/4.0.1",
+            "rootElement": "FNSINNSingularResponse"
+        }
+    ],
+    "Type": "OIV",
+    "_id": "FNSR"
+}
+{
+    "CertificateHash": "8df769370e6c5e31848728363d89630f",
+    "FtpUserPassword": "FSA0",
+    "HumanReadableName": "Росаккредитация",
+    "Mnemonic": "FSA0",
+    "MpcRegistrationList": [
+        {
+            "namespace": "urn://x-artefact-rosaccreditation-ru/rap/1.0.3",
+            "rootElement": "RequestFsaType"
+        },
+        {
+            "namespace": "urn://x-artefact-rosaccreditation-ru/rap/1.0.3",
+            "rootElement": "ResponseFsaType"
+        },
+        {
+            "namespace": "urn://x-artefact-rosaccreditation-ru/rcc/1.0.2",
+            "rootElement": "RequestFsaType"
+        },
+        {
+            "namespace": "urn://x-artefact-rosaccreditation-ru/rcc/1.0.2",
+            "rootElement": "ResponseFsaType"
+        },
+        {
+            "namespace": "urn://x-artefact-rosaccreditation-ru/rdc/1.0.2",
+            "rootElement": "RequestFsaType"
+        },
+        {
+            "namespace": "urn://x-artefact-rosaccreditation-ru/rdc/1.0.2",
+            "rootElement": "ResponseFsaType"
+        }
+    ],
+    "Type": "OIV",
+    "_id": "FSA0"
+}
+{
+    "CertificateHash": "06de755ddaaa70dfbe1524ed7f170ca5",
+    "FtpUserPassword": "RSIM",
+    "HumanReadableName": "Росимущество",
+    "Mnemonic": "RSIM",
+    "MpcRegistrationList": [
+        {
+            "namespace": "urn://x-artifacts-rsim-ru/smev-interaction/1.1.1",
+            "rootElement": "ExcerptRequest"
+        },
+        {
+            "namespace": "urn://x-artifacts-rsim-ru/smev-interaction/1.1.1",
+            "rootElement": "ExcerptResult"
+        }
+    ],
+    "Type": "OIV",
+    "_id": "RSIM"
+}

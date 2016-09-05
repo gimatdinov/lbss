@@ -6,3 +6,6 @@
 Запуск:
 ``docker-compose up -d``
 
+СМЭВ сервис:
+http://<DockerMachine>:8080/lbss-web/SMEVMessageExchangeService?wsdl
+
