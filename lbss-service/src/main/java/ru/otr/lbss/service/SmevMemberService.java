@@ -57,11 +57,11 @@ public class SmevMemberService {
 
 			if (modeService.getMemberServiceMode() == Mode.STUB) {
 				MongoCollection<SmevMember> collection = membersDB.getCollection(DocNames.SmevMember, SmevMember.class);
+				collection.findOneAndDelete(eq("Mnemonic", "STUB"));
 				SmevMember member = new SmevMember("STUB", "Тестовое ведомство");
 				member.setFtpUserPassword("STUB");
 				member.setCertificateHash(md5("STUB".getBytes()));
 				member.setType(SmevMember.Type.OIV);
-				collection.insertOne(member);
 			}
 
 			updateFTPUsers();
