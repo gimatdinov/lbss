@@ -29,14 +29,7 @@
 				</executions>
 				<configuration>
 					<imageName>${docker.image.prefix}/${project.artifactId}</imageName>
-					<dockerDirectory>${project.basedir}/src/main/docker</dockerDirectory>
-					<resources>
-						<resource>
-							<targetPath>/data/preset</targetPath>
-							<directory>${project.basedir}/src/main/json</directory>
-							<include>*.json</include>
-						</resource>
-					</resources>
+					<dockerDirectory>${project.basedir}/src/docker</dockerDirectory>
 				</configuration>
 			</plugin>
 		</plugins>
