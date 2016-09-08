@@ -93,6 +93,9 @@ public class SmevMemberService {
 	}
 
 	public SmevMember findMember(String mnemonic) {
+		if (modeService.getMemberServiceMode() == Mode.STUB) {
+			mnemonic = "STUB";
+		}
 		MongoCollection<SmevMember> collection = membersDB.getCollection(DocNames.SmevMember, SmevMember.class);
 		return collection.find(eq("Mnemonic", mnemonic)).first();
 	}
