@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<name>LBSS</name>
 	<url>https://github.com/gimatdinov/lbss</url>
@@ -25,7 +26,6 @@
 		<module>lbss-service</module>
 		<module>lbss-web</module>
 		<module>lbss-sba</module>
-		<module>lbss-db</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
@@ -61,5 +61,32 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>com.spotify</groupId>
+					<artifactId>docker-maven-plugin</artifactId>
+					<version>0.4.10</version>
+					<executions>
+						<execution>
+							<id>build-image</id>
+							<phase>package</phase>
+							<goals>
+								<goal>build</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+	<profiles>
+		<profile>
+			<id>build-docker-images</id>
+			<modules>
+				<module>lbss-db</module>
+			</modules>
+		</profile>
+	</profiles>
 </project>

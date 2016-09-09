@@ -20,7 +20,7 @@ public class LbssPropertiesService implements PropertiesService {
 
 	@PostConstruct
 	private void init() {
-		log.info("init : " + environment.getProperty("__OK"));
+		log.info("init : " + environment.getProperty("__PROFILE"));
 	}
 
 	@PreDestroy
