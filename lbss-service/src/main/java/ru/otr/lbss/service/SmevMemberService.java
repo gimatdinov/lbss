@@ -62,6 +62,7 @@ public class SmevMemberService {
 				member.setFtpUserPassword("STUB");
 				member.setCertificateHash(md5("STUB".getBytes()));
 				member.setType(SmevMember.Type.OIV);
+				collection.insertOne(member);
 			}
 
 			updateFTPUsers();
