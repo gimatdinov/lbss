@@ -11,8 +11,9 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<docker.image.prefix>gimatdinov</docker.image.prefix>
+		<docker.image.prefix>localhost:5000</docker.image.prefix>
 		<springboot.version>1.4.0.RELEASE</springboot.version>
+		<docker.images.version>1.0</docker.images.version>
 	</properties>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -26,7 +27,108 @@
 		<module>lbss-service</module>
 		<module>lbss-web</module>
 		<module>lbss-sba</module>
+		<module>lbss-db</module>
 	</modules>
+
+	<profiles>
+		<!--<profile>
+			<id>build-docker-images</id>
+			<modules>
+				<module>lbss-db</module>
+			</modules>
+		</profile>-->
+
+		<!--Profile for building images and storing localy-->
+		<profile>
+			<id>build-docker-images-local</id>
+			<activation>
+				<file>
+					<exists>src/main/resources/docker/Dockerfile</exists>
+				</file>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.spotify</groupId>
+						<artifactId>docker-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>remove-docker-image</id>
+								<phase>package</phase>
+								<goals>
+									<goal>removeImage</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>build-docker-image</id>
+								<phase>post-integration-test</phase>
+								<goals>
+									<goal>build</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>push-image</id>
+								<phase>post-integration-test</phase>
+								<goals>
+									<goal>push</goal>
+								</goals>
+								<configuration>
+									<imageName>${docker.image.prefix}/${project.artifactId}:${docker.images.version}</imageName>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+
+		<!--Profile for building images and pushing to localhost registry-->
+		<profile>
+			<id>build-docker-images-registry</id>
+			<activation>
+				<file>
+					<exists>src/main/resources/docker/Dockerfile</exists>
+				</file>
+			</activation>
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.spotify</groupId>
+						<artifactId>docker-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>remove-docker-image</id>
+								<phase>package</phase>
+								<goals>
+									<goal>removeImage</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>build-docker-image</id>
+								<phase>post-integration-test</phase>
+								<goals>
+									<goal>build</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>push-image</id>
+								<phase>post-integration-test</phase>
+								<goals>
+									<goal>push</goal>
+								</goals>
+								<configuration>
+									<imageName>${docker.image.prefix}/${project.artifactId}:${docker.images.version}</imageName>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -67,26 +169,25 @@
 				<plugin>
 					<groupId>com.spotify</groupId>
 					<artifactId>docker-maven-plugin</artifactId>
-					<version>0.4.10</version>
-					<executions>
-						<execution>
-							<id>build-image</id>
-							<phase>package</phase>
-							<goals>
-								<goal>build</goal>
-							</goals>
-						</execution>
-					</executions>
+					<version>0.4.13</version>
+					<configuration>
+						<dockerDirectory>${project.build.directory}/classes/docker</dockerDirectory>
+						<forceTags>true</forceTags>
+						<imageTags>
+							<imageTag>${docker.images.version}</imageTag>
+							<imageTag>latest</imageTag>
+						</imageTags>
+						<imageName>${docker.image.prefix}/${project.artifactId}</imageName>
+						<resources>
+							<resource>
+								<targetPath>/</targetPath>
+								<directory>${project.build.directory}</directory>
+								<include>${project.build.finalName}.jar</include>
+							</resource>
+						</resources>
+					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
-	<profiles>
-		<profile>
-			<id>build-docker-images</id>
-			<modules>
-				<module>lbss-db</module>
-			</modules>
-		</profile>
-	</profiles>
 </project>
