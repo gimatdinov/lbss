@@ -17,9 +17,39 @@
 			<plugin>
 				<groupId>com.spotify</groupId>
 				<artifactId>docker-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>remove-docker-image</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>removeImage</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>build-docker-images</id>
+						<phase>package</phase>
+						<goals>
+							<goal>build</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>push-image</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>push</goal>
+						</goals>
+						<configuration>
+							<imageName>${docker.image.prefix}/${project.artifactId}:${docker.images.version}</imageName>
+						</configuration>
+					</execution>
+				</executions>
 				<configuration>
-					<imageName>${docker.image.prefix}/${project.artifactId}</imageName>
-					<dockerDirectory>${project.basedir}/src/docker</dockerDirectory>
+					<dockerDirectory>${project.basedir}</dockerDirectory>
+					<forceTags>true</forceTags>
+					<imageTags>
+						<imageTag>${docker.images.version}</imageTag>
+						<imageTag>latest</imageTag>
+					</imageTags>
 				</configuration>
 			</plugin>
 		</plugins>
