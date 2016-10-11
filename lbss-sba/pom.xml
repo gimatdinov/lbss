@@ -95,9 +95,52 @@
 									<goal>build</goal>
 								</goals>
 							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>push-docker-images</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.spotify</groupId>
+						<artifactId>docker-maven-plugin</artifactId>
+						<configuration>
+							<dockerDirectory>${project.basedir}/src/docker</dockerDirectory>
+							<forceTags>true</forceTags>
+							<imageTags>
+								<imageTag>${docker.images.version}</imageTag>
+								<imageTag>latest</imageTag>
+							</imageTags>
+							<imageName>${docker.image.prefix}/${project.artifactId}</imageName>
+							<resources>
+								<resource>
+									<targetPath>/</targetPath>
+									<directory>${project.build.directory}</directory>
+									<include>${project.build.finalName}.jar</include>
+								</resource>
+							</resources>
+						</configuration>
+						<executions>
+							<execution>
+								<id>remove-docker-image</id>
+								<phase>prepare-package</phase>
+								<goals>
+									<goal>removeImage</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>build-docker-image</id>
+								<phase>package</phase>
+								<goals>
+									<goal>build</goal>
+								</goals>
+							</execution>
 							<execution>
 								<id>push-image</id>
-								<phase>install</phase>
+								<phase>package</phase>
 								<goals>
 									<goal>push</goal>
 								</goals>
