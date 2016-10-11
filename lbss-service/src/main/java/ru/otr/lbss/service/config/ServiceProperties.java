@@ -9,6 +9,7 @@ public interface ServiceProperties {
 
     final static String ftp_directory = "LBSS.service.ftp_directory";
     final static String ftp_port = "LBSS.service.ftp_port";
+    final static String ftp_passive_ports = "LBSS.service.ftp_passive_ports";
     final static String ftp_admin_password = "LBSS.service.ftp_admin_password";
     final static String ftp_log_enable = "LBSS.service.ftp_log_enable";
     final static String ftp_users_list = "LBSS.service.ftp_users_list";
