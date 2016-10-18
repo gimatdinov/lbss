@@ -12,12 +12,12 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<docker.image.prefix>gimatdinov</docker.image.prefix>
-		<springboot.version>1.4.1.RELEASE</springboot.version>
+		<springboot.version>1.4.0.RELEASE</springboot.version>
 	</properties>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.4.1.RELEASE</version>
+		<version>1.4.0.RELEASE</version>
 	</parent>
 
 	<modules>
