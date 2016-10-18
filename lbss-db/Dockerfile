@@ -11,4 +11,6 @@ RUN chmod +x /import-data.sh
 RUN mkdir /data/preset
 COPY data-preset/*.json /data/preset/
 
+EXPOSE 27017
+
 ENTRYPOINT ["/start-mongod.sh"]

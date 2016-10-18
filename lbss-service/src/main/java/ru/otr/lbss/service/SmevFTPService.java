@@ -10,6 +10,7 @@ import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
+import org.apache.ftpserver.DataConnectionConfigurationFactory;
 import org.apache.ftpserver.FtpServer;
 import org.apache.ftpserver.FtpServerFactory;
 import org.apache.ftpserver.ftplet.FtpException;
@@ -57,6 +58,7 @@ public class SmevFTPService {
         String ftpDirectory = propertiesService.getString(ServiceProperties.ftp_directory);
         log.info("FTP Directory : " + ftpDirectory);
         int ftpPort = propertiesService.getInteger(ServiceProperties.ftp_port, 21);
+        String ftpPassivePorts = propertiesService.getString(ServiceProperties.ftp_passive_ports, "30000-31000");
         try {
             if (!(new File(ftpDirectory)).exists()) {
                 throw new ExceptionWrapper("DirectoryNotExists", ftpDirectory);
@@ -64,13 +66,18 @@ public class SmevFTPService {
 
             String mongoHost = propertiesService.getString(ModelProperties.mongo_host);
             int mongoPort = propertiesService.getInteger(ModelProperties.mongo_port, 27017);
+
             String dbName = propertiesService.getString(ServiceProperties.ftp_users_database);
             ftpUserManager = new FTPUserManager(ftpDirectory, mongoHost, mongoPort, dbName, DocNames.FTPUser,
                     propertiesService.getString(ServiceProperties.ftp_admin_password, "admin"));
             FtpServerFactory serverFactory = new FtpServerFactory();
             serverFactory.setUserManager(ftpUserManager);
 
-            FTPListener ftpListener = new FTPListener(null, ftpPort, propertiesService.getBoolean(ServiceProperties.ftp_log_enable, false));
+            DataConnectionConfigurationFactory dcConfigFactory = new DataConnectionConfigurationFactory();
+            dcConfigFactory.setActiveEnabled(false);
+            dcConfigFactory.setPassivePorts(ftpPassivePorts);
+            FTPListener ftpListener = new FTPListener(null, ftpPort, dcConfigFactory.createDataConnectionConfiguration(),
+                    propertiesService.getBoolean(ServiceProperties.ftp_log_enable, false));
             serverFactory.addListener("default", ftpListener);
 
             serverFactory.getListeners();

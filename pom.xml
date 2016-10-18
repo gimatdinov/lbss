@@ -6,14 +6,15 @@
 	<description>(L)oop(B)ack(S)mev(S)tub</description>
 	<groupId>ru.otr.lbss</groupId>
 	<artifactId>lbss</artifactId>
-	<version>0.6.1-SNAPSHOT</version>
+	<version>0.6.1</version>
 	<packaging>pom</packaging>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<docker.image.prefix>gimatdinov</docker.image.prefix>
-		<springboot.version>1.4.0.RELEASE</springboot.version>
+		<docker.image.prefix>localhost:5000</docker.image.prefix>
+		<docker.images.version>${project.version}</docker.images.version>
 	</properties>
+
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
@@ -27,6 +28,22 @@
 		<module>lbss-web</module>
 		<module>lbss-sba</module>
 	</modules>
+
+	<profiles>
+		<profile>
+			<id>build-docker-images</id>
+			<modules>
+				<module>lbss-db</module>
+			</modules>
+		</profile>
+		<profile>
+			<id>push-docker-images</id>
+			<modules>
+				<module>lbss-db</module>
+			</modules>
+		</profile>
+	</profiles>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -67,26 +84,9 @@
 				<plugin>
 					<groupId>com.spotify</groupId>
 					<artifactId>docker-maven-plugin</artifactId>
-					<version>0.4.10</version>
-					<executions>
-						<execution>
-							<id>build-image</id>
-							<phase>package</phase>
-							<goals>
-								<goal>build</goal>
-							</goals>
-						</execution>
-					</executions>
+					<version>0.4.13</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
-	<profiles>
-		<profile>
-			<id>build-docker-images</id>
-			<modules>
-				<module>lbss-db</module>
-			</modules>
-		</profile>
-	</profiles>
 </project>

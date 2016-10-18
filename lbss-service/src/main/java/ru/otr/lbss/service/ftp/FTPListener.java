@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.ftpserver.DataConnectionConfigurationFactory;
+import org.apache.ftpserver.DataConnectionConfiguration;
 import org.apache.ftpserver.FtpServerConfigurationException;
 import org.apache.ftpserver.impl.DefaultFtpHandler;
 import org.apache.ftpserver.impl.FtpHandler;
@@ -43,8 +43,8 @@ public class FTPListener extends AbstractListener {
     private FtpServerContext context;
     private boolean loggerFilterEnable;
 
-    public FTPListener(String serverAddress, int port, boolean loggerFilterEnable) {
-        super(serverAddress, port, false, null, new DataConnectionConfigurationFactory().createDataConnectionConfiguration(), 300, null);
+    public FTPListener(String serverAddress, int port, DataConnectionConfiguration dataConnectionConfig, boolean loggerFilterEnable) {
+        super(serverAddress, port, false, null, dataConnectionConfig, 300, null);
         this.loggerFilterEnable = loggerFilterEnable;
     }
 

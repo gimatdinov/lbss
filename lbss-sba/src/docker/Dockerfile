@@ -10,4 +10,6 @@ RUN mkdir /data
 RUN mkdir /data/ftp
 RUN mkdir /var/log/lbss
 
+EXPOSE 2121 30000-31000
+
 ENTRYPOINT ["java", "-Dlogging.config=/config/logback.xml", "-jar", "/lbss-sba.jar"]
