@@ -33,6 +33,8 @@ public class WebConfig {
         log.info("SMEVMessageExchangeService URI : " + propertiesService.getString(WebProperties.WebServices_URI)
                 + propertiesService.getString(WebProperties.SMEVMessageExchangeService_endpoint));
         EndpointImpl endpoint = new EndpointImpl(getSpringBus(), getSMEVMessageExchange());
+        //javax.xml.ws.soap.SOAPBinding binding = (javax.xml.ws.soap.SOAPBinding)endpoint.getBinding();
+        //binding.setMTOMEnabled(true);
         endpoint.publish(propertiesService.getString(WebProperties.SMEVMessageExchangeService_endpoint));
         return endpoint;
     }

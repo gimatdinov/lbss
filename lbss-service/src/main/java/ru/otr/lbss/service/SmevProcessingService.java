@@ -216,8 +216,8 @@ public class SmevProcessingService {
         return collection.find(filter).first();
     }
 
-    public void putRequest(SendRequestRequest src, RequestRoutingData __routingData, boolean async) throws FailureWrapper {
-        RequestRoutingData routingData = SerializationUtils.clone(__routingData);
+    public void putRequest(final SendRequestRequest src, RequestRoutingData __routingData, boolean async) throws FailureWrapper {
+        final RequestRoutingData routingData = SerializationUtils.clone(__routingData);
         ProcessingTask task = new ProcessingTask(async) {
             public void run() {
                 try {
@@ -321,8 +321,8 @@ public class SmevProcessingService {
         }
     }
 
-    public void putResponse(SendResponseRequest src, ResponseRoutingData __routingData, boolean async) throws FailureWrapper {
-        ResponseRoutingData routingData = SerializationUtils.clone(__routingData);
+    public void putResponse(final SendResponseRequest src, ResponseRoutingData __routingData, boolean async) throws FailureWrapper {
+        final ResponseRoutingData routingData = SerializationUtils.clone(__routingData);
         ProcessingTask task = new ProcessingTask(async) {
             public void run() {
                 try {

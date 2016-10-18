@@ -1,5 +1,6 @@
 package ru.otr.lbss.service.model.codec;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -92,7 +93,7 @@ public class MessagePartsMaker {
             AttachmentContentType attach = new AttachmentContentType();
             attach.setId(item.getString("Id"));
             Binary content = (Binary) item.get("Content");
-            attach.setContent(new DataHandler(content.getData(), item.getString("MimeType")));
+            attach.setContent(new DataHandler(new InputStreamDataSource(new ByteArrayInputStream(content.getData()) ,"application/octet-stream")));
             result.getAttachmentContent().add(attach);
         }
         return result;
