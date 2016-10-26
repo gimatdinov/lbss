@@ -2,22 +2,13 @@ version: '2'
 
 services:
     lbss:
-        image: gimatdinov/lbss-sba
+        image: localhost:5000/lbss-sba
         ports:
             - 8080:8080
             - 2121:2121
-        volumes:
-            - lbssLOG:/var/log/lbss
-            - lbssFTP:/data/ftp
+            - 30000-31000:30000-31000
 
     lbss-db:
-        image: gimatdinov/lbss-db
+        image: localhost:5000/lbss-db
         ports:
             - 27017:27017
-        volumes:
-            - lbssDB:/data/db
-            
-volumes:
-    lbssLOG:
-    lbssFTP:
-    lbssDB:
