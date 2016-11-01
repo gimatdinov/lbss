@@ -6,6 +6,7 @@
 	<properties>
 		<java.version>1.8</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<docker.useConfigFile>true</docker.useConfigFile>
 	</properties>
 
 	<parent>
@@ -110,6 +111,7 @@
 						<configuration>
 							<dockerDirectory>${project.basedir}/src/docker</dockerDirectory>
 							<forceTags>true</forceTags>
+							<useConfigFile>${docker.useConfigFile}</useConfigFile>
 							<imageTags>
 								<imageTag>${docker.images.version}</imageTag>
 								<imageTag>latest</imageTag>
