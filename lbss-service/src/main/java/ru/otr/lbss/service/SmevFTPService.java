@@ -58,7 +58,7 @@ public class SmevFTPService {
         String ftpDirectory = propertiesService.getString(ServiceProperties.ftp_directory);
         log.info("FTP Directory : " + ftpDirectory);
         int ftpPort = propertiesService.getInteger(ServiceProperties.ftp_port, 21);
-        String ftpPassivePorts = propertiesService.getString(ServiceProperties.ftp_passive_ports, "30000-31000");
+        String ftpPassivePorts = propertiesService.getString(ServiceProperties.ftp_passive_ports, "30000-30100");
         try {
             if (!(new File(ftpDirectory)).exists()) {
                 throw new ExceptionWrapper("DirectoryNotExists", ftpDirectory);
@@ -85,6 +85,7 @@ public class SmevFTPService {
             ftpServer.start();
             ftpAddress = "ftp://SMEV_SERVER:" + ftpPort;
             log.info("FTP Address : " + ftpAddress);
+            log.info("FTP Passive ports : " + ftpPassivePorts);
 
             String users = propertiesService.getString(ServiceProperties.ftp_users_list);
             if (users != null) {
