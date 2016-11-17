@@ -1,4 +1,4 @@
-package ru.otr.lbss;
+package cxc.jex.common.application.config;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -9,12 +9,12 @@ import org.springframework.core.env.Environment;
 
 import cxc.jex.common.application.config.PropertiesService;
 
-public class LbssPropertiesService implements PropertiesService {
-	private static Logger log = LoggerFactory.getLogger(LbssPropertiesService.class);
+public class SpringPropertiesService implements PropertiesService {
+	private static Logger log = LoggerFactory.getLogger(SpringPropertiesService.class);
 
 	private Environment environment;
 
-	public LbssPropertiesService(Environment environment) {
+	public SpringPropertiesService(Environment environment) {
 		this.environment = environment;
 	}
 

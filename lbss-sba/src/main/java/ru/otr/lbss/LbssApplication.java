@@ -1,5 +1,7 @@
 package ru.otr.lbss;
 
+import javax.annotation.PostConstruct;
+
 import org.jolokia.http.AgentServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,8 +16,10 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 
+import cxc.jex.common.application.config.SpringPropertiesService;
 import cxc.jex.common.application.config.PropertiesService;
 import cxc.jex.common.application.message.ApplicationMessageService;
+import cxc.jex.common.application.message.SpringApplicationMessageService;
 import ru.otr.lbss.service.config.ServiceConfig;
 import ru.otr.lbss.web.config.WebConfig;
 
@@ -24,31 +28,37 @@ import ru.otr.lbss.web.config.WebConfig;
 @Import({ ServiceConfig.class, WebConfig.class })
 @PropertySource("classpath:application.properties")
 public class LbssApplication {
-    private static Logger log = LoggerFactory.getLogger(LbssApplication.class);
+	private static Logger log = LoggerFactory.getLogger(LbssApplication.class);
 
-    public static void main(String[] args) {
-        SpringApplication.run(LbssApplication.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(LbssApplication.class, args);
+	}
 
-    @Autowired
-    Environment environment;
+	@Autowired
+	Environment environment;
+	@Autowired
+	ApplicationMessageService msgService;
 
-    @Bean
-    PropertiesService propertiesService() {
-        return new LbssPropertiesService(environment);
-    }
+	@PostConstruct
+	private void init() {
+		log.info("init");
+	}
 
-    @Bean
-    ApplicationMessageService applicationMessageService() {
-        return new LbssApplicationMessageService();
+	@Bean
+	PropertiesService propertiesService() {
+		return new SpringPropertiesService(environment);
+	}
 
-    }
+	@Bean
+	ApplicationMessageService applicationMessageService() {
+		return new SpringApplicationMessageService();
+	}
 
-    @Bean
-    public ServletRegistrationBean jolokiaServletRegistrationBean() {
-        ServletRegistrationBean registration = new ServletRegistrationBean(new AgentServlet(), "/jolokia/*");
-        registration.setName("JolokiaAgent");
-        return registration;
-    }
+	@Bean
+	public ServletRegistrationBean jolokiaServletRegistrationBean() {
+		ServletRegistrationBean registration = new ServletRegistrationBean(new AgentServlet(), "/jolokia/*");
+		registration.setName("JolokiaAgent");
+		return registration;
+	}
 
 }
