@@ -21,7 +21,7 @@ public class SignHandler implements SOAPHandler<SOAPMessageContext> {
 	private SignatureProtector protector;
 
 	public SignHandler() {
-		log.debug("init");
+		log.info("init");
 		try {
 			protector = new SignatureProtector();
 		} catch (ExceptionWrapper e) {

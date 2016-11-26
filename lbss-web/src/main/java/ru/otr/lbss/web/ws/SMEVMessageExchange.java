@@ -8,6 +8,8 @@ import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.xml.bind.annotation.XmlSeeAlso;
 
+import org.apache.cxf.annotations.SchemaValidation;
+import org.apache.cxf.annotations.SchemaValidation.SchemaValidationType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,7 @@ import ru.otr.lbss.client.model.exceptions.*;
 import ru.otr.lbss.client.model.types.*;
 import ru.otr.lbss.client.model.types.basic.Void;
 
-
+@SchemaValidation(type = SchemaValidationType.REQUEST)
 @WebService(name = "SMEVMessageExchangeService", targetNamespace = Namespaces.SERVICE)
 @HandlerChain(file = "/handler-chain.xml")
 @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)

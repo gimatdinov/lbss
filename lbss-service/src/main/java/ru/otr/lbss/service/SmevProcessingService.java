@@ -121,11 +121,17 @@ public class SmevProcessingService {
     }
 
     private void processMessagePrimaryContent(RoutingData routingData, MessagePrimaryContent mpc) throws FailureWrapper {
+        if (mpc == null || mpc.getAny() == null) {
+            throw new FailureWrapper("SMEV.InvalidMessagePrimaryContent");
+        }
+        if (mpc.getAny().getNamespaceURI() == null || mpc.getAny().getLocalName() == null) {
+            throw new FailureWrapper("SMEV.InvalidMessagePrimaryContent");
+        }
+        if (mpc.getAny().getNamespaceURI().trim().length() == 0 || mpc.getAny().getLocalName().trim().length() == 0) {
+            throw new FailureWrapper("SMEV.InvalidMessagePrimaryContent");
+        }
         if (mpc != null && mpc.getAny() != null) {
             routingData.setMpcKey(new MpcKey(mpc.getAny().getNamespaceURI(), mpc.getAny().getLocalName()));
-        }
-        if (routingData.getMpcKey().getNamespace() == null || routingData.getMpcKey().getRootElement() == null) {
-            throw new FailureWrapper("SMEV.InvalidMessagePrimaryContent");
         }
     }
 
