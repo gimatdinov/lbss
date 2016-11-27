@@ -62,6 +62,7 @@ import ru.otr.lbss.service.model.ModelFilters;
 import ru.otr.lbss.service.model.types.MpcKey;
 import ru.otr.lbss.service.model.types.RequestRoutingData;
 import ru.otr.lbss.service.model.types.ResponseRoutingData;
+import ru.otr.lbss.service.model.types.ResponseRoutingData.ResponseKind;
 import ru.otr.lbss.service.model.types.RoutingData;
 import ru.otr.lbss.service.model.types.SmevFaultHelper;
 import ru.otr.lbss.service.model.types.SmevMember;
@@ -183,11 +184,22 @@ public class SmevProcessingService {
 
         result.getMessageMetadata().setMessageType(MessageTypeType.RESPONSE);
         if (request.getSenderProvidedResponseData().getMessagePrimaryContent() != null) {
+            result.setKind(ResponseKind.MessagePrimaryContent);
             processMessagePrimaryContent(result, request.getSenderProvidedResponseData().getMessagePrimaryContent());
             if (!sender.equals(memberService.findMember(result.getMpcKey()))) {
                 throw new FailureWrapper("SMEV.BusinessDataTypeIsNotSupported");
             }
         }
+        if (!request.getSenderProvidedResponseData().getRequestRejected().isEmpty()) {
+            result.setKind(ResponseKind.RequestRejected);
+        }
+        if (request.getSenderProvidedResponseData().getRequestStatus() != null) {
+            result.setKind(ResponseKind.RequestStatus);
+        }
+        if (request.getSenderProvidedResponseData().getAsyncProcessingStatus() != null) {
+            result.setKind(ResponseKind.AsyncProcessingStatus);
+        }
+
         MongoCollection<RequestMessage> collection = messagesDB.getCollection(DocNames.RequestMessage, RequestMessage.class);
         RequestMessage requestMessage = collection.find(eq("Request.ReplyTo", result.getTo())).first();
         if (requestMessage == null) {
@@ -334,8 +346,8 @@ public class SmevProcessingService {
                 try {
                     String senderMnemonic = routingData.getMessageMetadata().getSender().getMnemonic();
                     String recipientMnemonic = routingData.getMessageMetadata().getRecipient().getMnemonic();
-                    log.info(senderMnemonic + "->" + recipientMnemonic + " : putResponse : To = " + routingData.getTo() + ", MpcKey = "
-                            + routingData.getMpcKey());
+                    log.info(senderMnemonic + "->" + recipientMnemonic + " : putResponse : To = " + routingData.getTo() + ", "
+                            + (routingData.getKind() == ResponseKind.MessagePrimaryContent ? "MpcKey=" + routingData.getMpcKey() : routingData.getKind()));
                     Response response = new Response();
                     response.setId("ID_" + UUID.randomUUID());
                     MongoCollection<RequestMessage> requestCollection = messagesDB.getCollection(DocNames.RequestMessage, RequestMessage.class);
@@ -354,11 +366,13 @@ public class SmevProcessingService {
 
                     ResponseMessage responseMessage = new ResponseMessage();
                     responseMessage.setResponse(response);
-                    responseMessage.setAttachmentContentList(src.getAttachmentContentList());
-                    responseMessage.setMpcNamespace(routingData.getMpcKey().getNamespace());
-                    responseMessage.setMpcRootElement(routingData.getMpcKey().getRootElement());
+                    if (routingData.getMpcKey() != null) {
+                        responseMessage.setAttachmentContentList(src.getAttachmentContentList());
+                        responseMessage.setMpcNamespace(routingData.getMpcKey().getNamespace());
+                        responseMessage.setMpcRootElement(routingData.getMpcKey().getRootElement());
+                        ftpService.complete(responseMessage);
+                    }
 
-                    ftpService.complete(responseMessage);
                     signService.signSMEVSignature(responseMessage);
                     responseMessage.setAcknowledgmentTimestamp(System.currentTimeMillis() - acknowledgmentTimeout);
 
