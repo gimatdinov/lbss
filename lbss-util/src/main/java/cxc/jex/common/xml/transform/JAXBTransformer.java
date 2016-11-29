@@ -33,6 +33,9 @@ public class JAXBTransformer extends GeneralTransformer {
 	}
 
 	public String obj2xml(Object jaxbElement) throws ExceptionWrapper {
+		if (jaxbElement == null) {
+			throw new ExceptionWrapper("InvalidEmptyValue");
+		}
 		try {
 			StringWriter sw = new StringWriter();
 			marshaller.marshal(jaxbElement, sw);
@@ -44,6 +47,9 @@ public class JAXBTransformer extends GeneralTransformer {
 	}
 
 	public String obj2base(Object jaxbElement) throws ExceptionWrapper {
+		if (jaxbElement == null) {
+			throw new ExceptionWrapper("InvalidEmptyValue");
+		}
 		try {
 			StringWriter sw = new StringWriter();
 			marshaller.marshal(jaxbElement, sw);
@@ -54,6 +60,9 @@ public class JAXBTransformer extends GeneralTransformer {
 	}
 
 	public Object xml2obj(String xml) throws ExceptionWrapper {
+		if (xml == null) {
+			throw new ExceptionWrapper("InvalidEmptyValue");
+		}
 		try {
 			return unmarshaller.unmarshal(new StringReader(xml));
 		} catch (JAXBException e) {
@@ -62,6 +71,9 @@ public class JAXBTransformer extends GeneralTransformer {
 	}
 
 	public Object base2obj(String base64) throws ExceptionWrapper {
+		if (base64 == null) {
+			throw new ExceptionWrapper("InvalidEmptyValue");
+		}
 		try {
 			return unmarshaller.unmarshal(new StringReader(base2xml(base64)));
 		} catch (JAXBException e) {

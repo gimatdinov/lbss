@@ -1,5 +1,7 @@
 package ru.otr.lbss.service;
 
+import java.util.Arrays;
+
 import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
@@ -15,6 +17,7 @@ import ru.otr.lbss.client.model.types.basic.Void;
 import ru.otr.lbss.service.config.ModeService;
 import ru.otr.lbss.service.model.types.RequestRoutingData;
 import ru.otr.lbss.service.model.types.ResponseRoutingData;
+import ru.otr.lbss.service.model.types.ResponseRoutingData.ResponseKind;
 import ru.otr.lbss.service.model.types.SmevMember;
 
 public class SmevPrimeService implements SmevPrimeServiceLocal {
@@ -68,6 +71,13 @@ public class SmevPrimeService implements SmevPrimeServiceLocal {
 	public SendResponseResponse sendResponse(SendResponseRequest request) throws FailureWrapper {
 		SmevMember sender = validationService.checkCallerInformationSystemSignature(request.getCallerInformationSystemSignature());
 		ResponseRoutingData routingData = processingService.makeRoutingData(request, sender);
+		if (routingData.getKind() == ResponseKind.RequestRejected) {
+			for (SenderProvidedResponseData.RequestRejected reject : request.getSenderProvidedResponseData().getRequestRejected()) {
+				if (reject.getRejectionReasonCode() == null) {
+					throw new FailureWrapper("SMEV.IncorrectResponseContentType.InvalidRejectionReasonCode", Arrays.toString(RejectCode.values()));
+				}
+			}
+		}
 		// TODO проверка ответа
 		validationService.checkMessageID(request.getSenderProvidedResponseData().getMessageID());
 		boolean async = (request.getSenderProvidedResponseData().getRefAttachmentHeaderList() != null);

@@ -51,8 +51,6 @@ public class SMEVMessageExchange {
 			switch (e.getCode()) {
 			case "SMEV.InvalidMessagePrimaryContent":
 				throw new InvalidContentException(e.getMessage(), null);
-			case "SMEV.RecipientIsNotFound":
-				throw new RecipientIsNotFoundException(e.getMessage(), new Void());
 			case "SMEV.SignatureVerificationFault":
 				throw new SignatureVerificationFaultException(e.getMessage(), null);
 			case "SMEV.SenderIsNotRegistered":
@@ -61,7 +59,7 @@ public class SMEVMessageExchange {
 				throw new InvalidMessageIdFormatException(e.getMessage(), new Void());
 			case "SMEV.MessageIsAlreadySent":
 				throw new MessageIsAlreadySentException(e.getMessage(), new Void());
-			case "SMEV.BusinessDataTypeIsNotSupported":
+			case "SMEV.BusinessDataTypeIsNotSupported.Unregistered":
 				throw new BusinessDataTypeIsNotSupportedException(e.getMessage(), null);
 			default:
 				log.error(e.toString(), e);
@@ -85,7 +83,9 @@ public class SMEVMessageExchange {
 			switch (e.getCode()) {
 			case "SMEV.InvalidMessagePrimaryContent":
 				throw new InvalidContentException(e.getMessage(), null);
-			case "SMEV.RecipientIsNotFound":
+			case "SMEV.RecipientIsNotFound.RequestNotFound":
+				throw new RecipientIsNotFoundException(e.getMessage(), new Void());
+			case "SMEV.RecipientIsNotFound.UnregisteredRecipient":
 				throw new RecipientIsNotFoundException(e.getMessage(), new Void());
 			case "SMEV.SignatureVerificationFault":
 				throw new SignatureVerificationFaultException(e.getMessage(), null);
@@ -95,8 +95,12 @@ public class SMEVMessageExchange {
 				throw new InvalidMessageIdFormatException(e.getMessage(), new Void());
 			case "SMEV.MessageIsAlreadySent":
 				throw new MessageIsAlreadySentException(e.getMessage(), new Void());
-			case "SMEV.BusinessDataTypeIsNotSupported":
+			case "SMEV.BusinessDataTypeIsNotSupported.Unregistered":
 				throw new BusinessDataTypeIsNotSupportedException(e.getMessage(), null);
+			case "SMEV.BusinessDataTypeIsNotSupported.NotOwner":
+				throw new BusinessDataTypeIsNotSupportedException(e.getMessage(), null);
+			case "SMEV.IncorrectResponseContentType.InvalidRejectionReasonCode":
+				throw new IncorrectResponseContentTypeException(e.getMessage(), null);
 			default:
 				log.error(e.toString(), e);
 				throw new SMEVFailureException(e.getMessage(), new Void());

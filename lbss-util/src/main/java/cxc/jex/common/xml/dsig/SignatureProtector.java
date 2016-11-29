@@ -19,6 +19,7 @@ public class SignatureProtector {
 	public SignatureProtector() throws ExceptionWrapper {
 		transform = new GeneralTransformer();
 	}
+
 	public boolean isSignature(Node node) {
 		return (node.getNodeType() == Node.ELEMENT_NODE && XML_SignatureNamespaceURI.equals(node.getNamespaceURI())
 		        && XML_SignatureLocalName.equals(node.getLocalName()));
@@ -28,7 +29,7 @@ public class SignatureProtector {
 		return (node.getNodeType() == Node.ELEMENT_NODE && XML_ProtectorNamespaceURI.equals(node.getNamespaceURI())
 		        && XML_ProtectorLocalName.equals(node.getLocalName()));
 	}
-	
+
 	public void packAllSignatures(Document dom) throws ExceptionWrapper {
 		NodeList nodeList = dom.getElementsByTagName("*");
 		for (int i = 0; i < nodeList.getLength(); i++) {
@@ -65,14 +66,16 @@ public class SignatureProtector {
 
 	public Document unpackSignature(Node packedSignature) throws ExceptionWrapper {
 		if (isPackedSignature(packedSignature)) {
-			String signatureBase64 = packedSignature.getFirstChild().getTextContent();
-			String signature = transform.base2xml(signatureBase64);
-			return transform.xml2dom(signature);
+			if (packedSignature.getFirstChild() != null) {
+				String signatureBase64 = packedSignature.getFirstChild().getTextContent();
+				String signature = transform.base2xml(signatureBase64);
+				return transform.xml2dom(signature);
+			} else {
+				throw new ExceptionWrapper(new IllegalArgumentException());
+			}
 		} else {
 			throw new ExceptionWrapper(new IllegalArgumentException());
 		}
 	}
-
-
 
 }

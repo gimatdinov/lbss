@@ -33,7 +33,7 @@ import cxc.jex.common.exception.ExceptionWrapper;
 public class GeneralTransformer {
 
 	private Transformer transformerNode;
-	private DocumentBuilder xmlDocBuilder;
+	private DocumentBuilderFactory docBuilderFactory;
 
 	private MessageFactory soapMsgFactory;
 
@@ -42,16 +42,13 @@ public class GeneralTransformer {
 			transformerNode = TransformerFactory.newInstance().newTransformer();
 			transformerNode.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
 
-			DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+			docBuilderFactory = DocumentBuilderFactory.newInstance();
 			docBuilderFactory.setNamespaceAware(true);
-			xmlDocBuilder = docBuilderFactory.newDocumentBuilder();
 
 			soapMsgFactory = MessageFactory.newInstance();
 		} catch (TransformerConfigurationException e) {
 			throw new ExceptionWrapper(e);
 		} catch (TransformerFactoryConfigurationError e) {
-			throw new ExceptionWrapper(e);
-		} catch (ParserConfigurationException e) {
 			throw new ExceptionWrapper(e);
 		} catch (SOAPException e) {
 			throw new ExceptionWrapper(e);
@@ -59,6 +56,9 @@ public class GeneralTransformer {
 	}
 
 	public String xml2base(String xml) throws ExceptionWrapper {
+		if (xml == null) {
+			throw new ExceptionWrapper("InvalidEmptyValue");
+		}
 		try {
 			return new String(Base64.getEncoder().encode(xml.getBytes("UTF-8")));
 		} catch (UnsupportedEncodingException e) {
@@ -67,6 +67,9 @@ public class GeneralTransformer {
 	}
 
 	public String base2xml(String base64) throws ExceptionWrapper {
+		if (base64 == null) {
+			throw new ExceptionWrapper("InvalidEmptyValue");
+		}
 		try {
 			return new String(Base64.getDecoder().decode(base64), "UTF-8");
 		} catch (UnsupportedEncodingException e) {
@@ -75,6 +78,9 @@ public class GeneralTransformer {
 	}
 
 	public String dom2xml(Node dom) throws ExceptionWrapper {
+		if (dom == null) {
+			throw new ExceptionWrapper("InvalidEmptyValue");
+		}
 		try {
 			StringWriter result = new StringWriter();
 			transformerNode.transform(new DOMSource(dom), new StreamResult(result));
@@ -85,42 +91,54 @@ public class GeneralTransformer {
 	}
 
 	public Document xml2dom(String xml) throws ExceptionWrapper {
-		try {
-			InputStream src = new ByteArrayInputStream(xml.getBytes("UTF-8"));
-			Document result = xmlDocBuilder.parse(src);
-			src.close();
+		if (xml == null) {
+			throw new ExceptionWrapper("InvalidEmptyValue");
+		}
+		try (InputStream bais = new ByteArrayInputStream(xml.getBytes("UTF-8"))) {
+			DocumentBuilder xmlDocBuilder = docBuilderFactory.newDocumentBuilder();
+			Document result = xmlDocBuilder.parse(bais);
 			return result;
 		} catch (IOException e) {
 			throw new ExceptionWrapper(e);
 		} catch (SAXException e) {
 			throw new ExceptionWrapper(e);
+		} catch (ParserConfigurationException e) {
+			throw new ExceptionWrapper(e);
+		} finally {
 		}
 	}
 
 	public String msg2xml(SOAPMessage msg) throws ExceptionWrapper {
-
-		try {
-			ByteArrayOutputStream result = new ByteArrayOutputStream();
+		if (msg == null) {
+			throw new ExceptionWrapper("InvalidEmptyValue");
+		}
+		try (ByteArrayOutputStream result = new ByteArrayOutputStream()) {
 			msg.writeTo(result);
 			return new String(result.toByteArray(), "UTF-8");
 		} catch (SOAPException e) {
 			throw new ExceptionWrapper(e);
 		} catch (IOException e) {
 			throw new ExceptionWrapper(e);
+		} finally {
 		}
 
 	}
 
 	public SOAPMessage xml2msg(String xml) throws ExceptionWrapper {
-		try {
-			return soapMsgFactory.createMessage(new MimeHeaders(), new ByteArrayInputStream(xml.getBytes("UTF-8")));
+		if (xml == null) {
+			throw new ExceptionWrapper("InvalidEmptyValue");
+		}
+		try (ByteArrayInputStream bais = new ByteArrayInputStream(xml.getBytes("UTF-8"))) {
+			return soapMsgFactory.createMessage(new MimeHeaders(), bais);
 		} catch (UnsupportedEncodingException e) {
 			throw new ExceptionWrapper(e);
 		} catch (IOException e) {
 			throw new ExceptionWrapper(e);
 		} catch (SOAPException e) {
 			throw new ExceptionWrapper(e);
+		} finally {
 		}
+
 	}
 
 }
