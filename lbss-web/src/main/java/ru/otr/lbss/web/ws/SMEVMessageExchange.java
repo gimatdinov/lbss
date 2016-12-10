@@ -123,6 +123,8 @@ public class SMEVMessageExchange {
 				throw new SignatureVerificationFaultException(e.getMessage(), null);
 			case "SMEV.SenderIsNotRegistered":
 				throw new SenderIsNotRegisteredException(e.getMessage(), null);
+			case "SMEV.AccessDenied.DDOS":
+				throw new SenderIsNotRegisteredException(e.getMessage(), null);
 			default:
 				log.error(e.toString(), e);
 				throw new SMEVFailureException(e.getMessage(), new Void());
@@ -164,6 +166,8 @@ public class SMEVMessageExchange {
 			case "SMEV.SignatureVerificationFault":
 				throw new SignatureVerificationFaultException(e.getMessage(), null);
 			case "SMEV.SenderIsNotRegistered":
+				throw new SenderIsNotRegisteredException(e.getMessage(), null);
+			case "SMEV.AccessDenied.DDOS":
 				throw new SenderIsNotRegisteredException(e.getMessage(), null);
 			default:
 				log.error(e.toString(), e);

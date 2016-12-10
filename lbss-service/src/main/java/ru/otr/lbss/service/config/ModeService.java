@@ -23,6 +23,8 @@ public class ModeService {
 	private SmevFTPService.Mode ftpServiceMode;
 	private SmevMemberService.Mode memberServiceMode;
 
+	private boolean antiDDOSEnable;
+
 	@PostConstruct
 	private void init() {
 		log.info("init");
@@ -32,15 +34,19 @@ public class ModeService {
 			        .valueOf(propertiesService.getString(ServiceProperties.PrimeService_mode, SmevPrimeServiceLocal.Mode.LIVE.toString()));
 			log.info("PrimeServiceMode : " + primeServiceMode.toString());
 
-			signServiceMode = SmevSignService.Mode.valueOf(propertiesService.getString(ServiceProperties.SignService_mode, SmevSignService.Mode.STUB.toString()));
+			signServiceMode = SmevSignService.Mode
+			        .valueOf(propertiesService.getString(ServiceProperties.SignService_mode, SmevSignService.Mode.STUB.toString()));
 			log.info("SignServiceMode : " + signServiceMode.toString());
 
 			ftpServiceMode = SmevFTPService.Mode.valueOf(propertiesService.getString(ServiceProperties.FTPService_mode, SmevFTPService.Mode.COPY.toString()));
 			log.info("FTPServiceMode : " + ftpServiceMode.toString());
-			
-			memberServiceMode = SmevMemberService.Mode.valueOf(propertiesService.getString(ServiceProperties.MemberService_mode, SmevMemberService.Mode.STUB.toString()));
+
+			memberServiceMode = SmevMemberService.Mode
+			        .valueOf(propertiesService.getString(ServiceProperties.MemberService_mode, SmevMemberService.Mode.STUB.toString()));
 			log.info("MemberServiceMode : " + memberServiceMode.toString());
 
+			antiDDOSEnable = propertiesService.getBoolean(ServiceProperties.AntiDDOS_enable, false);
+			log.info("AntiDDOS : " + (antiDDOSEnable ? "ENABLE" : "DISABLE"));
 
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -58,10 +64,13 @@ public class ModeService {
 	public SmevFTPService.Mode getFtpServiceMode() {
 		return ftpServiceMode;
 	}
-	
+
 	public SmevMemberService.Mode getMemberServiceMode() {
 		return memberServiceMode;
 	}
 
+	public boolean isAntiDDOSEnable() {
+		return antiDDOSEnable;
+	}
 
 }

@@ -14,6 +14,7 @@ import ru.otr.lbss.client.api.*;
 import ru.otr.lbss.client.model.types.*;
 import ru.otr.lbss.client.model.types.basic.InteractionStatusType;
 import ru.otr.lbss.client.model.types.basic.Void;
+import ru.otr.lbss.service.antiddos.AntiDDOS;
 import ru.otr.lbss.service.config.ModeService;
 import ru.otr.lbss.service.model.types.RequestRoutingData;
 import ru.otr.lbss.service.model.types.ResponseRoutingData;
@@ -31,6 +32,8 @@ public class SmevPrimeService implements SmevPrimeServiceLocal {
 	private SmevProcessingService processingService;
 	@Autowired
 	private SmevSignService signService;
+	@Autowired
+	private AntiDDOS antiDDOS;
 
 	@PostConstruct
 	private void init() {
@@ -102,16 +105,24 @@ public class SmevPrimeService implements SmevPrimeServiceLocal {
 	@Override
 	public GetRequestResponse getRequest(GetRequestRequest request) throws FailureWrapper {
 		SmevMember recipient = validationService.checkCallerInformationSystemSignature(request.getCallerInformationSystemSignature());
+		antiDDOS.checkGetRequest(recipient, System.currentTimeMillis());
 		GetRequestResponse response = new GetRequestResponse();
 		response.setRequestMessage(processingService.getRequest(request, recipient));
+		if (response.getRequestMessage() != null) {
+			antiDDOS.resetGetRequest(recipient);
+		}
 		return response;
 	}
 
 	@Override
 	public GetResponseResponse getResponse(GetResponseRequest request) throws FailureWrapper {
 		SmevMember recipient = validationService.checkCallerInformationSystemSignature(request.getCallerInformationSystemSignature());
+		antiDDOS.checkGetResponse(recipient, System.currentTimeMillis());
 		GetResponseResponse response = new GetResponseResponse();
 		response.setResponseMessage(processingService.getResponse(request, recipient));
+		if (response.getResponseMessage() != null) {
+			antiDDOS.resetGetResponse(recipient);
+		}
 		return response;
 	}
 
