@@ -1,4 +1,4 @@
-FROM mongo:3.2.9
+FROM mongo:3.2
 
 COPY start-mongod.sh /
 RUN sed -i 's/\r$//g' /start-mongod.sh
