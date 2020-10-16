@@ -5,6 +5,7 @@ import javax.xml.ws.Endpoint;
 import org.apache.cxf.Bus;
 import org.apache.cxf.bus.spring.SpringBus;
 import org.apache.cxf.jaxws.EndpointImpl;
+import org.apache.cxf.jaxws.binding.soap.SOAPBindingImpl;
 import org.apache.cxf.transport.servlet.CXFServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,11 @@ public class WebConfig {
         log.info("SMEVMessageExchangeService URI : " + propertiesService.getString(WebProperties.WebServices_URI)
                 + propertiesService.getString(WebProperties.SMEVMessageExchangeService_endpoint));
         EndpointImpl endpoint = new EndpointImpl(getSpringBus(), getSMEVMessageExchange());
+        boolean mtomEnable = propertiesService.getBoolean(WebProperties.MTOM_enable);
+        if (mtomEnable) {
+            SOAPBindingImpl binding = (SOAPBindingImpl) endpoint.getBinding();
+            binding.setMTOMEnabled(true);
+        }
         endpoint.publish(propertiesService.getString(WebProperties.SMEVMessageExchangeService_endpoint));
         return endpoint;
     }

@@ -15,7 +15,7 @@
 	<parent>
 		<groupId>ru.otr.lbss</groupId>
 		<artifactId>lbss</artifactId>
-		<version>0.6.3</version>
+		<version>0.6.4</version>
 	</parent>
 	<dependencies>
         <dependency>
