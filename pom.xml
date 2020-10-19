@@ -6,7 +6,7 @@
 	<description>(L)oop(B)ack(S)mev(S)tub</description>
 	<groupId>ru.otr.lbss</groupId>
 	<artifactId>lbss</artifactId>
-	<version>0.6.3</version>
+	<version>0.6.4</version>
 	<packaging>pom</packaging>
 
 	<properties>
