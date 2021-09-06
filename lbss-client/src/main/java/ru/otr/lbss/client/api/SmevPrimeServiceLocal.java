@@ -2,8 +2,6 @@ package ru.otr.lbss.client.api;
 
 import cxc.jex.common.failure.FailureWrapper;
 import ru.otr.lbss.client.model.types.AckRequest;
-import ru.otr.lbss.client.model.types.GetIncomingQueueStatisticsRequest;
-import ru.otr.lbss.client.model.types.GetIncomingQueueStatisticsResponse;
 import ru.otr.lbss.client.model.types.GetRequestRequest;
 import ru.otr.lbss.client.model.types.GetRequestResponse;
 import ru.otr.lbss.client.model.types.GetResponseRequest;

@@ -214,16 +214,16 @@ public class DocumentPartsMaker {
 		result.append("Sender",
 		        new Document("Mnemonic", metadata.getSender().getMnemonic()).append("HumanReadableName", metadata.getSender().getHumanReadableName()));
 		result.append("SendingTimestamp", metadata.getSendingTimestamp().toGregorianCalendar().getTime());
-		result.append("DestinationName", metadata.getDestinationName());
+		//result.append("DestinationName", metadata.getDestinationName());
 		if (metadata.getRecipient() != null) {
 			result.append("Recipient", new Document("Mnemonic", metadata.getRecipient().getMnemonic()).append("HumanReadableName",
 			        metadata.getRecipient().getHumanReadableName()));
 		}
-		Document supplementaryDataDoc = new Document("InteractionType", metadata.getSupplementaryData().getInteractionType().toString());
+		/*Document supplementaryDataDoc = new Document("InteractionType", metadata.getSupplementaryData().getInteractionType().toString());
 		if (metadata.getSupplementaryData().getDetectedContentTypeName() != null) {
 			supplementaryDataDoc.append("DetectedContentTypeName", metadata.getSupplementaryData().getDetectedContentTypeName());
 		}
-		result.append("SupplementaryData", supplementaryDataDoc);
+		result.append("SupplementaryData", supplementaryDataDoc);*/
 		if (metadata.getDeliveryTimestamp() != null) {
 			result.append("DeliveryTimestamp", metadata.getDeliveryTimestamp().toGregorianCalendar().getTime());
 		}
@@ -245,5 +245,4 @@ public class DocumentPartsMaker {
 		}
 		return result;
 	}
-
 }
