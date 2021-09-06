@@ -321,7 +321,7 @@ public class MessageMetadata implements Serializable {
         "mnemonic",
         "humanReadableName"
     })
-    public static class Recipient {
+    public static class Recipient implements Serializable{
 
         @XmlElement(name = "Mnemonic")
         protected String mnemonic;
@@ -404,7 +404,7 @@ public class MessageMetadata implements Serializable {
         "mnemonic",
         "humanReadableName"
     })
-    public static class Sender {
+    public static class Sender implements Serializable {
 
         @XmlElement(name = "Mnemonic")
         protected String mnemonic;

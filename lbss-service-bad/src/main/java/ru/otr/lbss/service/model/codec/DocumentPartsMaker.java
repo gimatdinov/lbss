@@ -245,5 +245,4 @@ public class DocumentPartsMaker {
 		}
 		return result;
 	}
-
 }

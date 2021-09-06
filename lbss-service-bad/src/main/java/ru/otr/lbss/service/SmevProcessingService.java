@@ -16,6 +16,7 @@ import javax.annotation.PreDestroy;
 import javax.xml.datatype.DatatypeFactory;
 
 import org.apache.commons.lang3.SerializationUtils;
+import org.bson.BsonDocument;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.slf4j.Logger;
@@ -33,7 +34,6 @@ import ru.otr.lbss.client.api.SmevPrimeServiceLocal;
 import ru.otr.lbss.client.api.SmevPrimeServiceLocal.Mode;
 import ru.otr.lbss.client.model.types.AsyncProcessingStatus;
 import ru.otr.lbss.client.model.types.AsyncProcessingStatusData;
-
 import ru.otr.lbss.client.model.types.GetRequestRequest;
 import ru.otr.lbss.client.model.types.GetResponseRequest;
 import ru.otr.lbss.client.model.types.GetStatusRequest;
@@ -46,10 +46,9 @@ import ru.otr.lbss.client.model.types.SendResponseRequest;
 import ru.otr.lbss.client.model.types.SenderProvidedRequestData;
 import ru.otr.lbss.client.model.types.SenderProvidedResponseData;
 import ru.otr.lbss.client.model.types.SmevAsyncProcessingMessage;
-
 import ru.otr.lbss.client.model.types.GetRequestResponse.RequestMessage;
 import ru.otr.lbss.client.model.types.GetResponseResponse.ResponseMessage;
-
+//import ru.otr.lbss.client.model.types.MessageMetadata.SupplementaryData;
 import ru.otr.lbss.client.model.types.basic.InteractionStatusType;
 import ru.otr.lbss.client.model.types.basic.InteractionTypeType;
 import ru.otr.lbss.client.model.types.basic.MessagePrimaryContent;
@@ -117,7 +116,7 @@ public class SmevProcessingService {
 		metadata.setId("ID_" + UUID.randomUUID());
 		metadata.setMessageId(msgId.trim().toLowerCase());
 		metadata.setSendingTimestamp(datatypeFactory.newXMLGregorianCalendar(new GregorianCalendar()));
-
+		//metadata.setDestinationName("TODO DestinationName");
 		routingData.setMessageMetadata(metadata);
 	}
 
@@ -139,28 +138,26 @@ public class SmevProcessingService {
 	private void processSupplementaryData(RoutingData routingData, SmevMember sender, SmevMember recipient) throws FailureWrapper {
 		routingData.getMessageMetadata().setSender(sender.toSender());
 		routingData.getMessageMetadata().setRecipient(recipient.toRecipient());
-		/*routingData.getMessageMetadata().setSupplementaryData(new SupplementaryData());
-		routingData.getMessageMetadata().getSupplementaryData().setInteractionType(InteractionTypeType.NOT_DETECTED);
+		//routingData.getMessageMetadata().setSupplementaryData(new SupplementaryData());
+		//routingData.getMessageMetadata().getSupplementaryData().setInteractionType(InteractionTypeType.NOT_DETECTED);
 		if (sender.getType() == SmevMember.Type.PGU) {
 			if (recipient.getType() == SmevMember.Type.OIV) {
-				routingData.getMessageMetadata().getSupplementaryData().setInteractionType(InteractionTypeType.PGU_2_OIV);
+				//routingData.getMessageMetadata().getSupplementaryData().setInteractionType(InteractionTypeType.PGU_2_OIV);
 			}
 		}
 		if (sender.getType() == SmevMember.Type.OIV) {
 			if (recipient.getType() == SmevMember.Type.OIV) {
 				if (sender.equals(recipient)) {
-					routingData.getMessageMetadata().getSupplementaryData().setInteractionType(InteractionTypeType.OIV_2_SAME_OIV);
+					//routingData.getMessageMetadata().getSupplementaryData().setInteractionType(InteractionTypeType.OIV_2_SAME_OIV);
 				} else {
-					routingData.getMessageMetadata().getSupplementaryData().setInteractionType(InteractionTypeType.OIV_2_OIV);
+					//routingData.getMessageMetadata().getSupplementaryData().setInteractionType(InteractionTypeType.OIV_2_OIV);
 				}
 			}
 			if (recipient.getType() == SmevMember.Type.PGU) {
-				routingData.getMessageMetadata().getSupplementaryData().setInteractionType(InteractionTypeType.PGU_2_OIV);
+				//routingData.getMessageMetadata().getSupplementaryData().setInteractionType(InteractionTypeType.PGU_2_OIV);
 			}
 		}
-		routingData.getMessageMetadata().getSupplementaryData().setDetectedContentTypeName("TODO SupplementaryData.DetectedContentTypeName");
-
-		 */
+		//routingData.getMessageMetadata().getSupplementaryData().setDetectedContentTypeName("TODO SupplementaryData.DetectedContentTypeName");
 	}
 
 	public RequestRoutingData makeRoutingData(SendRequestRequest request, SmevMember sender) throws FailureWrapper {
@@ -204,7 +201,7 @@ public class SmevProcessingService {
 			RequestMessage requestMessage = requestCollection.find(eq("Request.ReplyTo", result.getTo())).first();
 
 			//TODO Нужно сюда вкорячить поиск в БД корневого элемента, который не равен текущему и находится в одном namespace
-			result.setMpcKey(new MpcKey(requestMessage.getMpcNamespace(), requestMessage.getMpcRootElement().replace("Request", "Responce")));
+			//result.setMpcKey(new MpcKey(requestMessage.getMpcNamespace(), requestMessage.getMpcRootElement().replace("Request", "Responce")));
 			//////////////////////////////////////////////////////////////
 
 		}
@@ -333,17 +330,11 @@ public class SmevProcessingService {
 		metadata.setMessageType(MessageTypeType.RESPONSE);
 		metadata.setSender(ModelConstants.SMEV_AS_MEMBER.toSender());
 		metadata.setSendingTimestamp(datatypeFactory.newXMLGregorianCalendar(new GregorianCalendar()));
-
-		MessageMetadata.Recipient recipient = new MessageMetadata.Recipient();
-		recipient.setHumanReadableName(routingData.getMessageMetadata().getSender().getHumanReadableName());
-		recipient.setMnemonic(routingData.getMessageMetadata().getSender().getMnemonic());
-
 		//metadata.setRecipient(routingData.getMessageMetadata().getSender().toRecipient());
-		metadata.setRecipient(recipient);
-
-		//metadata.setSupplementaryData(new SupplementaryData());
-		//metadata.getSupplementaryData().setInteractionType(InteractionTypeType.OTHER);
-		//metadata.setDestinationName("TODO DestinationName");
+		metadata.setRecipient(routingData.getMessageMetadata().getRecipient());
+		/*metadata.setSupplementaryData(new SupplementaryData());
+		metadata.getSupplementaryData().setInteractionType(InteractionTypeType.OTHER);
+		metadata.setDestinationName("TODO DestinationName");*/
 		metadata.setStatus(InteractionStatusType.RESPONSE_IS_ACCEPTED_BY_SMEV);
 		response.setMessageMetadata(metadata);
 
@@ -439,12 +430,7 @@ public class SmevProcessingService {
 		statusMessage.getAsyncProcessingStatusData().setId("ID_" + UUID.randomUUID());
 		statusMessage.getAsyncProcessingStatusData().setAsyncProcessingStatus(status);
 
-		MessageMetadata.Recipient recipient = new MessageMetadata.Recipient();
-		recipient.setHumanReadableName(routingData.getMessageMetadata().getSender().getHumanReadableName());
-		recipient.setMnemonic(routingData.getMessageMetadata().getSender().getMnemonic());
-
 		//statusMessage.setRecipient(routingData.getMessageMetadata().getSender().toRecipient());
-		statusMessage.setRecipient(recipient);
 
 		try {
 			signService.signSMEVSignature(statusMessage);
@@ -500,6 +486,7 @@ public class SmevProcessingService {
 
 	public RequestMessage getRequest(GetRequestRequest request, SmevMember recipient) {
 		log.info(recipient.getMnemonic() + " : getRequest");
+		log.info("{}", recipient.toString());
 		MongoCollection<RequestMessage> collection = messagesDB.getCollection(DocNames.RequestMessage, RequestMessage.class);
 		Bson filter = eq("Request.MessageMetadata.Status", InteractionStatusType.REQUEST_IS_ACCEPTED_BY_SMEV.toString());
 		filter = and(filter, eq("Request.MessageMetadata.Recipient.Mnemonic", recipient.getMnemonic()));
@@ -511,7 +498,11 @@ public class SmevProcessingService {
 		}
 		// TODO добавить в фильтр String nodeID =
 		// request.getMessageTypeSelector().getNodeID();
+
 		RequestMessage requestMessage = collection.find(filter).sort(ascending("Request.MessageMetadata.SendingTimestamp")).first();
+
+
+
 		if (getMode() == SmevPrimeServiceLocal.Mode.LIVE && requestMessage != null) {
 			collection.updateOne(eq(FieldNames.docId, requestMessage.getDocId().toString()),
 			        new Document("$set", new Document(FieldNames.acknowledgmentTimestamp, System.currentTimeMillis())));
@@ -548,7 +539,7 @@ public class SmevProcessingService {
 		filter = and(filter, eq("Recipient.Mnemonic", sender.getMnemonic()));
 		SmevAsyncProcessingMessage statusMessage = collection.find(filter).first();
 		if (getMode() == SmevPrimeServiceLocal.Mode.LIVE && statusMessage != null) {
-			collection.updateOne(eq(FieldNames.docId, statusMessage.getDocId().toString()), new Document("$set", new Document(FieldNames.delivered, true)));
+			//collection.updateOne(eq(FieldNames.docId, statusMessage.getDocId().toString()), new Document("$set", new Document(FieldNames.delivered, true)));
 		}
 		return statusMessage;
 	}

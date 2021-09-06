@@ -235,6 +235,7 @@ public class MessagePartsMaker {
         sendingTimestamp.setTime(doc.getDate("SendingTimestamp"));
         result.setSendingTimestamp(datatypeFactory.newXMLGregorianCalendar(sendingTimestamp));
         //result.setDestinationName(doc.getString("DestinationName"));
+        result.getRecipient().setHumanReadableName(doc.getString("DestinationName"));
 
         if (doc.get("Recipient") != null) {
             Document recipientDoc = (Document) doc.get("Recipient");

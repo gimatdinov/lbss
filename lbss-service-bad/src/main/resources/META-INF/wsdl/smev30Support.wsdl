@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.otr.com/sufd/smev30SupportService"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:flt="http://www.otr.com/sufd/smev30SupportService/xml/faultMessage"
+             xmlns="http://schemas.xmlsoap.org/wsdl/" name="signWebService"
+             targetNamespace="http://www.otr.com/sufd/smev30SupportService">
+	<types>
+		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.otr.com/sufd/smev30SupportService"
+		           xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:flt="http://www.otr.com/sufd/smev30SupportService/xml/faultMessage"
+		           xmlns="http://schemas.xmlsoap.org/wsdl/"
+		           targetNamespace="http://www.otr.com/sufd/smev30SupportService">
+			<xs:element name="createEPOVSignatureRequest" type="xs:base64Binary"/>
+			<xs:element name="createEPOVSignatureResponse" type="xs:base64Binary"/>
+
+			<xs:element name="checkEPOVSignatureRequest" type="xs:base64Binary"/>
+			<xs:element name="checkEPOVSignatureResponse" type="tns:checkResultResponse"/>
+
+			<xs:element name="checkEPSMEVSignatureRequest" type="xs:base64Binary"/>
+			<xs:element name="checkEPSMEVSignatureResponse" type="tns:checkResultResponse"/>
+
+			<xs:element name="signXmlRequest" type="tns:signXmlParams"/>
+			<xs:element name="signXmlResponse" type="xs:base64Binary"/>
+
+			<xs:element name="checkSignXmlRequest" type="xs:base64Binary"/>
+			<xs:element name="checkSignXmlResponse" type="tns:checkSignXmlResult"/>
+
+			<xs:complexType name="signXmlParams">
+				<xs:sequence>
+					<xs:element name="xml" type="xs:base64Binary"/>
+					<xs:element minOccurs="0" maxOccurs="1" name="fingerprint" type="xs:string"/>
+					<xs:element minOccurs="0" maxOccurs="1" name="reference" type="xs:string"/>
+					<xs:element minOccurs="0" maxOccurs="1" name="detached" type="xs:boolean"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="checkSignXmlResult">
+				<xs:sequence>
+					<xs:element name="status" type="xs:string"/>
+					<xs:element minOccurs="0" name="message" type="xs:string"/>
+					<xs:element minOccurs="0" maxOccurs="unbounded" name="signs" type="tns:SignDetail"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="SignDetail">
+				<xs:sequence>
+					<xs:element name="status" type="xs:string"/>
+					<xs:element minOccurs="0" name="code" type="xs:string"/>
+					<xs:element minOccurs="0" name="message" type="xs:string"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="checkResultResponse">
+				<xs:sequence>
+					<xs:element name="resultCode" type="xs:string"/>
+					<xs:choice maxOccurs="1" minOccurs="0">
+						<xs:element name="resultDetails" type="xs:string"/>
+					</xs:choice>
+				</xs:sequence>
+			</xs:complexType>
+		</xs:schema>
+		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.otr.com/sufd/smev30SupportService"
+		           xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:flt="http://www.otr.com/sufd/smev30SupportService/xml/faultMessage"
+		           xmlns="http://schemas.xmlsoap.org/wsdl/"
+		           targetNamespace="http://www.otr.com/sufd/smev30SupportService/xml/faultMessage">
+			<xs:element name="faultDetail">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="fltCode" type="xs:string"/>
+						<xs:element name="fltMessage" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:schema>
+	</types>
+	<message name="checkEPSMEVSignatureRequestMessage">
+		<part element="tns:checkEPSMEVSignatureRequest" name="signedSoapEnvelop">
+			<documentation>SOAP конверт содаржажий ЭП-СМЭВ 3.0</documentation>
+		</part>
+	</message>
+	<message name="checkEPSMEVSignatureResponseMessage">
+		<part element="tns:checkEPSMEVSignatureResponse" name="checkResult">
+			<documentation>Результат проверки подписи в виде структуры CheckResultResponse</documentation>
+		</part>
+	</message>
+	<message name="createEPOVSignatureRequestMessage">
+		<part element="tns:createEPOVSignatureRequest" name="soapEnvelop">
+			<documentation>SOAP конверт</documentation>
+		</part>
+	</message>
+	<message name="createEPOVSignatureResponseMessage">
+		<part element="tns:createEPOVSignatureResponse" name="signedSoapEnvelop">
+			<documentation>SOAP конверт содержащий ЭП-ОВ СМЭВ 3.0</documentation>
+		</part>
+	</message>
+	<message name="checkEPOVSignatureRequestMessage">
+		<part element="tns:checkEPOVSignatureRequest" name="signedSoapEnvelop">
+			<documentation>SOAP конверт содержащий ЭП-ОВ СМЭВ 3.0</documentation>
+		</part>
+	</message>
+	<message name="checkEPOVSignatureResponseMessage">
+		<part element="tns:checkEPOVSignatureResponse" name="checkResult">
+			<documentation>Результат проверки подписи в виде структуры CheckResultResponse</documentation>
+		</part>
+	</message>
+	<message name="signXmlRequestMessage">
+		<part element="tns:signXmlRequest" name="signXmlParams">
+			<documentation>Xml документ который необходимо подписать</documentation>
+		</part>
+	</message>
+	<message name="signXmlResponseMessage">
+		<part element="tns:signXmlResponse" name="signedXml">
+			<documentation>Подписанный xml документ</documentation>
+		</part>
+	</message>
+	<message name="checkSignXmlRequestMessage">
+		<part element="tns:checkSignXmlRequest" name="signedXml">
+			<documentation>Подписанный xml документ</documentation>
+		</part>
+	</message>
+	<message name="checkSignXmlResponseMessage">
+		<part element="tns:checkSignXmlResponse" name="checkResult">
+			<documentation>Результат проверки подписи в виде структуры CheckResultResponse</documentation>
+		</part>
+	</message>
+	<message name="faultMessage">
+		<part element="flt:faultDetail" name="faultDetail"></part>
+	</message>
+	<portType name="smev30SupportServicePortType">
+		<documentation>Подсистема подписания документов</documentation>
+		<operation name="createEPOVSignature">
+			<documentation>Метод формирования ЭП-ОВ СМЭВ 3.0</documentation>
+			<input message="tns:createEPOVSignatureRequestMessage"></input>
+			<output message="tns:createEPOVSignatureResponseMessage"></output>
+			<fault message="tns:faultMessage" name="createEPOVSignatureFaultMessage"></fault>
+		</operation>
+		<operation name="checkEPSMEVSignature">
+			<documentation>Метод проверки ЭП-СМЭВ 3.0</documentation>
+			<input message="tns:checkEPSMEVSignatureRequestMessage"></input>
+			<output message="tns:checkEPSMEVSignatureResponseMessage"></output>
+			<fault message="tns:faultMessage" name="checkEPSMEVSignatureFaultMessage"></fault>
+		</operation>
+		<operation name="checkEPOVSignature">
+			<documentation>Метод проверки ЭП-ОВ 3.0</documentation>
+			<input message="tns:checkEPOVSignatureRequestMessage"></input>
+			<output message="tns:checkEPOVSignatureResponseMessage"></output>
+			<fault message="tns:faultMessage" name="checkEPOVSignatureFaultMessage"></fault>
+		</operation>
+		<operation name="signXml">
+			<documentation>Метод подписания xml документа</documentation>
+			<input message="tns:signXmlRequestMessage"></input>
+			<output message="tns:signXmlResponseMessage"></output>
+			<fault message="tns:faultMessage" name="signXmlFaultMessage"></fault>
+		</operation>
+		<operation name="checkSignXml">
+			<documentation>Метод проверки ЭП xml документа</documentation>
+			<input message="tns:checkSignXmlRequestMessage"></input>
+			<output message="tns:checkSignXmlResponseMessage"></output>
+			<fault message="tns:faultMessage" name="checkSignXmlFaultMessage"></fault>
+		</operation>
+	</portType>
+	<binding name="smev30SupportServiceBinding" type="tns:smev30SupportServicePortType">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="createEPOVSignature">
+			<soap:operation soapAction=""/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="createEPOVSignatureFaultMessage">
+				<soap:fault name="createEPOVSignatureFaultMessage" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="checkEPSMEVSignature">
+			<soap:operation soapAction=""/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="checkEPSMEVSignatureFaultMessage">
+				<soap:fault name="checkEPSMEVSignatureFaultMessage" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="checkEPOVSignature">
+			<soap:operation soapAction=""/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="checkEPOVSignatureFaultMessage">
+				<soap:fault name="checkEPOVSignatureFaultMessage" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="signXml">
+			<soap:operation soapAction=""/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="signXmlFaultMessage">
+				<soap:fault name="signXmlFaultMessage" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="checkSignXml">
+			<soap:operation soapAction=""/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="checkSignXmlFaultMessage">
+				<soap:fault name="checkSignXmlFaultMessage" use="literal"/>
+			</fault>
+		</operation>
+	</binding>
+	<service name="smev30SupportService">
+		<port binding="tns:smev30SupportServiceBinding" name="smev30SupportServicePort">
+			<soap:address location="http://localhost:9000/smev30SupportService"/>
+		</port>
+	</service>
+</definitions>
