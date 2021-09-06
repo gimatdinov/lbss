@@ -35,6 +35,4 @@ public interface SmevPrimeServiceLocal {
 
 	Void ack(AckRequest request) throws FailureWrapper;
 
-	GetIncomingQueueStatisticsResponse getIncomingQueueStatistics(GetIncomingQueueStatisticsRequest request) throws FailureWrapper;
-
 }

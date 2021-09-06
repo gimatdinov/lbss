@@ -162,13 +162,4 @@ public class SmevPrimeService implements SmevPrimeServiceLocal {
 		}
 		return new Void();
 	}
-
-	@Override
-	public GetIncomingQueueStatisticsResponse getIncomingQueueStatistics(GetIncomingQueueStatisticsRequest request) throws FailureWrapper {
-		SmevMember sender = validationService.checkCallerInformationSystemSignature(request.getCallerInformationSystemSignature());
-		GetIncomingQueueStatisticsResponse response = new GetIncomingQueueStatisticsResponse();
-		response.getQueueStatistics().addAll(processingService.getIncomingQueueStatistics(request, sender));
-		return response;
-	}
-
 }

@@ -199,25 +199,4 @@ public class SMEVMessageExchange {
 			}
 		}
 	}
-
-	@WebMethod(operationName = "GetIncomingQueueStatistics", action = "urn:GetIncomingQueueStatistics")
-	@WebResult(name = "GetIncomingQueueStatisticsResponse", targetNamespace = Namespaces.TYPES, partName = "parameters")
-	public GetIncomingQueueStatisticsResponse getIncomingQueueStatistics(
-	        @WebParam(name = "GetIncomingQueueStatisticsRequest", targetNamespace = Namespaces.TYPES, partName = "parameters") GetIncomingQueueStatisticsRequest parameters)
-	        throws InvalidContentException, SMEVFailureException, SenderIsNotRegisteredException, SignatureVerificationFaultException {
-		try {
-			return service.getIncomingQueueStatistics(parameters);
-		} catch (FailureWrapper e) {
-			switch (e.getCode()) {
-			case "SMEV.SignatureVerificationFault":
-				throw new SignatureVerificationFaultException(e.getMessage(), null);
-			case "SMEV.SenderIsNotRegistered":
-				throw new SenderIsNotRegisteredException(e.getMessage(), null);
-			default:
-				log.error(e.toString(), e);
-				throw new SMEVFailureException(e.getMessage(), new Void());
-			}
-		}
-	}
-
 }
