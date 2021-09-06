@@ -4,18 +4,22 @@ import java.util.Arrays;
 
 import javax.annotation.PostConstruct;
 
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import cxc.jex.common.exception.ExceptionWrapper;
 import cxc.jex.common.failure.FailureWrapper;
+import org.springframework.beans.factory.annotation.Qualifier;
 import ru.otr.lbss.client.api.*;
 import ru.otr.lbss.client.model.types.*;
 import ru.otr.lbss.client.model.types.basic.InteractionStatusType;
 import ru.otr.lbss.client.model.types.basic.Void;
 import ru.otr.lbss.service.antiddos.AntiDDOS;
 import ru.otr.lbss.service.config.ModeService;
+import ru.otr.lbss.service.model.types.MpcKey;
 import ru.otr.lbss.service.model.types.RequestRoutingData;
 import ru.otr.lbss.service.model.types.ResponseRoutingData;
 import ru.otr.lbss.service.model.types.ResponseRoutingData.ResponseKind;
@@ -35,9 +39,15 @@ public class SmevPrimeService implements SmevPrimeServiceLocal {
 	@Autowired
 	private AntiDDOS antiDDOS;
 
+
+	@Autowired
+	@Qualifier("messagesDB")
+	private MongoDatabase messagesDB;
+
+
 	@PostConstruct
 	private void init() {
-		log.info("init");
+		log.info("init SmevPrimeService");
 	}
 
 	@Override
@@ -91,6 +101,8 @@ public class SmevPrimeService implements SmevPrimeServiceLocal {
 		}
 		SendResponseResponse response = new SendResponseResponse();
 		response.setMessageMetadata(routingData.getMessageMetadata());
+
+
 		try {
 			signService.signSMEVSignature(response);
 		} catch (ExceptionWrapper e) {

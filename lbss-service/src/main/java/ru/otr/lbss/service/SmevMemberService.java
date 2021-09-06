@@ -1,9 +1,13 @@
 package ru.otr.lbss.service;
 
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.in;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -47,9 +51,12 @@ public class SmevMemberService {
 	private CertificateHelper certificateHelper;
 	private MessageDigest messageDigest;
 
+	private String certificateHash = "";
+	private List<MpcKey> mpcRegistrationList = new ArrayList<>();
+
 	@PostConstruct
 	private void init() {
-		log.info("init");
+		log.info("init SMEV Member Service");
 		try {
 			protector = new SignatureProtector();
 			certificateHelper = new CertificateHelper();
@@ -73,7 +80,7 @@ public class SmevMemberService {
 
 	@PreDestroy
 	private void fina() {
-		log.info("fina");
+		log.info("final");
 	}
 
 	private String md5(byte[] data) {
@@ -86,6 +93,7 @@ public class SmevMemberService {
 	}
 
 	private void updateFTPUsers() throws ExceptionWrapper {
+		log.info("Обгновление учетных записей для FTP пользователей из БД");
 		MongoCollection<SmevMember> collection = membersDB.getCollection(DocNames.SmevMember, SmevMember.class);
 		MongoCursor<SmevMember> cursor = collection.find().iterator();
 		while (cursor.hasNext()) {
@@ -98,6 +106,7 @@ public class SmevMemberService {
 			mnemonic = "STUB";
 		}
 		MongoCollection<SmevMember> collection = membersDB.getCollection(DocNames.SmevMember, SmevMember.class);
+
 		return collection.find(eq("Mnemonic", mnemonic)).first();
 	}
 
@@ -108,7 +117,7 @@ public class SmevMemberService {
 		try {
 			Document signature = protector.unpackSignature(packedSignature);
 			byte[] certificate = certificateHelper.findSingleCertificate(signature);
-			String certificateHash = md5(certificate);
+			certificateHash = md5(certificate);
 			log.info("findMember : certificateHash=" + certificateHash);
 			MongoCollection<SmevMember> collection = membersDB.getCollection(DocNames.SmevMember, SmevMember.class);
 			return collection.find(eq("CertificateHash", certificateHash)).first();
@@ -128,4 +137,18 @@ public class SmevMemberService {
 		return collection.find(filter).first();
 	}
 
+	public String getCertificateHash(){
+		return certificateHash;
+	}
+
+	public String findReverseRootTag(String mnemonic, String namespace, String rootElement) {
+		log.info("findReverseRootTag");
+		List<String> result = new ArrayList<>();
+		if (modeService.getMemberServiceMode() == Mode.STUB) {
+			mnemonic = "STUB";
+		}
+		SmevMember src = findMember(mnemonic);
+
+		return src.getMpcRegistrationList().get(0).getRootElement();
+	}
 }

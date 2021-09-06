@@ -29,7 +29,7 @@ public class SmevValidationService {
 
     @PostConstruct
     private void init() {
-        log.info("init");
+        log.info("init SmevValidationService");
 
     }
 
@@ -39,7 +39,7 @@ public class SmevValidationService {
         }
         SmevMember member = memberService.findMember(ciss.getAny());
         if (member == null) {
-            throw new FailureWrapper("SMEV.SenderIsNotRegistered");
+            throw new FailureWrapper("SMEV.SenderIsNotRegistered", "Хэш сертификата = " +memberService.getCertificateHash());
         }
         return member;
     }

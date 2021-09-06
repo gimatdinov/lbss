@@ -57,11 +57,6 @@ public class SmevMemberCodec implements CollectibleCodec<SmevMember> {
         result.setType(SmevMember.Type.valueOf(doc.getString("Type")));
         result.setFtpUserPassword(doc.getString("FtpUserPassword"));
         result.setCertificateHash(doc.getString("CertificateHash"));
-
-        List<Document> mpcRegistrationDocList = (List<Document>) doc.get("MpcRegistrationList");
-        for (Document item : mpcRegistrationDocList) {
-        	result.getMpcRegistrationList().add(new MpcKey(item));
-        }
         return result;
     }
 

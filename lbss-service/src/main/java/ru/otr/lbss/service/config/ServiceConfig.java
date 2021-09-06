@@ -27,6 +27,8 @@ public class ServiceConfig {
 		return new SmevPrimeService();
 	};
 
+
+
 	@Bean
 	SmevMemberService getSmevMemberService() {
 		return new SmevMemberService();

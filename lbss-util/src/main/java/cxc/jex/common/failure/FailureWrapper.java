@@ -34,6 +34,11 @@ public class FailureWrapper extends Exception {
 		this.code = code;
 	}
 
+	public FailureWrapper(String code, String additionText) {
+		super("[" + PROMPT + ":" + code + "] " + msgHelper.findMessage(code) + " " + additionText);
+		this.code = code;
+	}
+
 	public FailureWrapper(String code, Object... parameters) {
 		super("[" + PROMPT + ":" + code + "] " + String.format(msgHelper.findMessage(code), parameters));
 		this.code = code;

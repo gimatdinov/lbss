@@ -1,10 +1,8 @@
 package ru.otr.lbss.service.model;
 
-import static com.mongodb.client.model.Filters.and;
-import static com.mongodb.client.model.Filters.eq;
-import static com.mongodb.client.model.Filters.lt;
-
 import org.bson.conversions.Bson;
+
+import static com.mongodb.client.model.Filters.*;
 
 public class ModelFilters {
 

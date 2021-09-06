@@ -191,11 +191,20 @@ public class SmevProcessingService {
 				throw new FailureWrapper("SMEV.BusinessDataTypeIsNotSupported.Unregistered");
 			}
 			if (!sender.equals(owner)) {
-				throw new FailureWrapper("SMEV.BusinessDataTypeIsNotSupported.NoOwner");
+				throw new FailureWrapper("SMEV.BusinessDataTypeIsNotSupported.NoOwner", String.format("Отправитель (%s) не совпадает с владельцем ВС (%s)", sender.getMnemonic(), owner.getMnemonic()));
 			}
 		}
 		if (!request.getSenderProvidedResponseData().getRequestRejected().isEmpty()) {
+			log.info("Ответ содержит отказ Reject");
 			result.setKind(ResponseKind.RequestRejected);
+			// Ищем первоначальный запрос
+			MongoCollection<RequestMessage> requestCollection = messagesDB.getCollection(DocNames.RequestMessage, RequestMessage.class);
+			RequestMessage requestMessage = requestCollection.find(eq("Request.ReplyTo", result.getTo())).first();
+
+			//TODO Нужно сюда вкорячить поиск в БД корневого элемента, который не равен текущему и находится в одном namespace
+			result.setMpcKey(new MpcKey(requestMessage.getMpcNamespace(), requestMessage.getMpcRootElement().replace("Request", "Responce")));
+			//////////////////////////////////////////////////////////////
+
 		}
 		if (request.getSenderProvidedResponseData().getRequestStatus() != null) {
 			result.setKind(ResponseKind.RequestStatus);
@@ -209,6 +218,7 @@ public class SmevProcessingService {
 		if (requestMessage == null) {
 			throw new FailureWrapper("SMEV.RecipientIsNotFound.RequestNotFound");
 		}
+
 		String requestSenderMnemonic = requestMessage.getRequest().getMessageMetadata().getSender().getMnemonic();
 		SmevMember recipient = memberService.findMember(requestSenderMnemonic);
 		if (recipient == null) {
@@ -293,8 +303,8 @@ public class SmevProcessingService {
 	}
 
 	private void putFailure(SendRequestRequest src, RequestRoutingData routingData, FailureWrapper failure) {
-		log.info(routingData.getMessageMetadata().getSender().getMnemonic() + " : putFailure : ReplyTo = " + routingData.getReplyTo() + ", MpcKey = "
-		        + routingData.getMpcKey());
+		log.info("{} : putFailure : ReplyTo = {} , MpcKey = {}", routingData.getMessageMetadata().getSender().getMnemonic(), routingData.getReplyTo() , routingData.getMpcKey() );
+		log.info("{}", failure.getMessage());
 		Response response = new Response();
 		response.setId("ID_" + UUID.randomUUID());
 		response.setOriginalMessageId(src.getSenderProvidedRequestData().getMessageID());
@@ -345,6 +355,7 @@ public class SmevProcessingService {
 
 	public void putResponse(SendResponseRequest src, ResponseRoutingData __routingData, boolean async) throws FailureWrapper {
 		ResponseRoutingData routingData = SerializationUtils.clone(__routingData);
+
 		ProcessingTask task = new ProcessingTask(async) {
 			public void run() {
 				try {
@@ -379,6 +390,7 @@ public class SmevProcessingService {
 
 					MongoCollection<ResponseMessage> responseCollection = messagesDB.getCollection(DocNames.ResponseMessage, ResponseMessage.class);
 					responseCollection.insertOne(responseMessage);
+
 				} catch (FailureWrapper failure) {
 					setFailure(failure);
 					if (isAsync()) {

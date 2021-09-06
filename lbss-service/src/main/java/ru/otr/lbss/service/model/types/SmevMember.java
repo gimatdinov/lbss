@@ -1,6 +1,7 @@
 package ru.otr.lbss.service.model.types;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import ru.otr.lbss.client.model.types.MessageMetadata.Recipient;
@@ -16,7 +17,6 @@ public class SmevMember {
 	private Type type;
 	private String ftpUserPassword;
 	private String certificateHash;
-
 	private List<MpcKey> mpcRegistrationList = new ArrayList<>();
 
 	public SmevMember(String mnemonic, String humanReadableName) {
