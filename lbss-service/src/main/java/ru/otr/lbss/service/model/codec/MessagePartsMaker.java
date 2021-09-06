@@ -234,7 +234,7 @@ public class MessagePartsMaker {
         GregorianCalendar sendingTimestamp = new GregorianCalendar();
         sendingTimestamp.setTime(doc.getDate("SendingTimestamp"));
         result.setSendingTimestamp(datatypeFactory.newXMLGregorianCalendar(sendingTimestamp));
-        result.setDestinationName(doc.getString("DestinationName"));
+        //result.setDestinationName(doc.getString("DestinationName"));
 
         if (doc.get("Recipient") != null) {
             Document recipientDoc = (Document) doc.get("Recipient");
@@ -244,12 +244,12 @@ public class MessagePartsMaker {
         }
 
         Document supplementaryDataDoc = (Document) doc.get("SupplementaryData");
-        result.setSupplementaryData(new MessageMetadata.SupplementaryData());
+        /*result.setSupplementaryData(new MessageMetadata.SupplementaryData());
         if (supplementaryDataDoc.get("DetectedContentTypeName") != null) {
             result.getSupplementaryData().setDetectedContentTypeName(supplementaryDataDoc.getString("DetectedContentTypeName"));
         }
         result.getSupplementaryData().setInteractionType(InteractionTypeType.valueOf(supplementaryDataDoc.getString("InteractionType")));
-
+        */
         if (doc.get("DeliveryTimestamp") != null) {
             GregorianCalendar deliveryTimestamp = new GregorianCalendar();
             sendingTimestamp.setTime(doc.getDate("DeliveryTimestamp"));

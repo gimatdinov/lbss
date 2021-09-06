@@ -14,12 +14,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import cxc.jex.common.failure.FailureWrapper;
+import cxc.jex.common.failure.*;
 import ru.otr.lbss.client.api.SmevPrimeServiceLocal;
-import ru.otr.lbss.client.model.Namespaces;
+import ru.otr.lbss.client.model.*;
+
 import ru.otr.lbss.client.model.exceptions.*;
 import ru.otr.lbss.client.model.types.*;
 import ru.otr.lbss.client.model.types.basic.Void;
+
+
 
 @SchemaValidation(type = SchemaValidationType.REQUEST)
 @WebService(name = "SMEVMessageExchangeService", targetNamespace = Namespaces.SERVICE)
@@ -34,16 +37,17 @@ public class SMEVMessageExchange {
 	private SmevPrimeServiceLocal service;
 
 	public SMEVMessageExchange() {
-		log.info("init");
+		log.info("SMEVMessageExchange init");
 	}
 
 	@WebMethod(operationName = "SendRequest", action = "urn:SendRequest")
 	@WebResult(name = "SendRequestResponse", targetNamespace = Namespaces.TYPES, partName = "parameters")
+
 	public SendRequestResponse sendRequest(
 	        @WebParam(name = "SendRequestRequest", targetNamespace = Namespaces.TYPES, partName = "parameters") SendRequestRequest parameters)
 	        throws AccessDeniedException, AttachmentContentMiscoordinationException, AttachmentSizeLimitExceededException,
-	        BusinessDataTypeIsNotSupportedException, DestinationOverflowException, EndOfLifeException, InvalidContentException, InvalidMessageIdFormatException,
-	        MessageIsAlreadySentException, QuoteLimitExceededException, RecipientIsNotFoundException, SMEVFailureException, SenderIsNotRegisteredException,
+			BusinessDataTypeIsNotSupportedException, DestinationOverflowException, EndOfLifeException, InvalidContentException, InvalidMessageIdFormatException,
+			MessageIsAlreadySentException, QuoteLimitExceededException, RecipientIsNotFoundException, SMEVFailureException, SenderIsNotRegisteredException,
 	        SignatureVerificationFaultException, StaleMessageIdException, TransactionCodeInvalidException {
 		try {
 			return service.sendRequest(parameters);
@@ -195,25 +199,4 @@ public class SMEVMessageExchange {
 			}
 		}
 	}
-
-	@WebMethod(operationName = "GetIncomingQueueStatistics", action = "urn:GetIncomingQueueStatistics")
-	@WebResult(name = "GetIncomingQueueStatisticsResponse", targetNamespace = Namespaces.TYPES, partName = "parameters")
-	public GetIncomingQueueStatisticsResponse getIncomingQueueStatistics(
-	        @WebParam(name = "GetIncomingQueueStatisticsRequest", targetNamespace = Namespaces.TYPES, partName = "parameters") GetIncomingQueueStatisticsRequest parameters)
-	        throws InvalidContentException, SMEVFailureException, SenderIsNotRegisteredException, SignatureVerificationFaultException {
-		try {
-			return service.getIncomingQueueStatistics(parameters);
-		} catch (FailureWrapper e) {
-			switch (e.getCode()) {
-			case "SMEV.SignatureVerificationFault":
-				throw new SignatureVerificationFaultException(e.getMessage(), null);
-			case "SMEV.SenderIsNotRegistered":
-				throw new SenderIsNotRegisteredException(e.getMessage(), null);
-			default:
-				log.error(e.toString(), e);
-				throw new SMEVFailureException(e.getMessage(), new Void());
-			}
-		}
-	}
-
 }

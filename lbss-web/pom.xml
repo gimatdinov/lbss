@@ -41,5 +41,9 @@
 			<groupId>ru.otr.lbss</groupId>
 			<artifactId>lbss-client</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>ru.otr.lbss</groupId>
+			<artifactId>lbss-client</artifactId>
+		</dependency>
 	</dependencies>
 </project>

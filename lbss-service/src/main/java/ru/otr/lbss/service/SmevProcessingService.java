@@ -33,7 +33,7 @@ import ru.otr.lbss.client.api.SmevPrimeServiceLocal;
 import ru.otr.lbss.client.api.SmevPrimeServiceLocal.Mode;
 import ru.otr.lbss.client.model.types.AsyncProcessingStatus;
 import ru.otr.lbss.client.model.types.AsyncProcessingStatusData;
-import ru.otr.lbss.client.model.types.GetIncomingQueueStatisticsRequest;
+
 import ru.otr.lbss.client.model.types.GetRequestRequest;
 import ru.otr.lbss.client.model.types.GetResponseRequest;
 import ru.otr.lbss.client.model.types.GetStatusRequest;
@@ -46,10 +46,10 @@ import ru.otr.lbss.client.model.types.SendResponseRequest;
 import ru.otr.lbss.client.model.types.SenderProvidedRequestData;
 import ru.otr.lbss.client.model.types.SenderProvidedResponseData;
 import ru.otr.lbss.client.model.types.SmevAsyncProcessingMessage;
-import ru.otr.lbss.client.model.types.GetIncomingQueueStatisticsResponse.QueueStatistics;
+
 import ru.otr.lbss.client.model.types.GetRequestResponse.RequestMessage;
 import ru.otr.lbss.client.model.types.GetResponseResponse.ResponseMessage;
-import ru.otr.lbss.client.model.types.MessageMetadata.SupplementaryData;
+
 import ru.otr.lbss.client.model.types.basic.InteractionStatusType;
 import ru.otr.lbss.client.model.types.basic.InteractionTypeType;
 import ru.otr.lbss.client.model.types.basic.MessagePrimaryContent;
@@ -117,7 +117,7 @@ public class SmevProcessingService {
 		metadata.setId("ID_" + UUID.randomUUID());
 		metadata.setMessageId(msgId.trim().toLowerCase());
 		metadata.setSendingTimestamp(datatypeFactory.newXMLGregorianCalendar(new GregorianCalendar()));
-		metadata.setDestinationName("TODO DestinationName");
+
 		routingData.setMessageMetadata(metadata);
 	}
 
@@ -139,7 +139,7 @@ public class SmevProcessingService {
 	private void processSupplementaryData(RoutingData routingData, SmevMember sender, SmevMember recipient) throws FailureWrapper {
 		routingData.getMessageMetadata().setSender(sender.toSender());
 		routingData.getMessageMetadata().setRecipient(recipient.toRecipient());
-		routingData.getMessageMetadata().setSupplementaryData(new SupplementaryData());
+		/*routingData.getMessageMetadata().setSupplementaryData(new SupplementaryData());
 		routingData.getMessageMetadata().getSupplementaryData().setInteractionType(InteractionTypeType.NOT_DETECTED);
 		if (sender.getType() == SmevMember.Type.PGU) {
 			if (recipient.getType() == SmevMember.Type.OIV) {
@@ -159,6 +159,8 @@ public class SmevProcessingService {
 			}
 		}
 		routingData.getMessageMetadata().getSupplementaryData().setDetectedContentTypeName("TODO SupplementaryData.DetectedContentTypeName");
+
+		 */
 	}
 
 	public RequestRoutingData makeRoutingData(SendRequestRequest request, SmevMember sender) throws FailureWrapper {
@@ -191,11 +193,20 @@ public class SmevProcessingService {
 				throw new FailureWrapper("SMEV.BusinessDataTypeIsNotSupported.Unregistered");
 			}
 			if (!sender.equals(owner)) {
-				throw new FailureWrapper("SMEV.BusinessDataTypeIsNotSupported.NoOwner");
+				throw new FailureWrapper("SMEV.BusinessDataTypeIsNotSupported.NoOwner", String.format("Отправитель (%s) не совпадает с владельцем ВС (%s)", sender.getMnemonic(), owner.getMnemonic()));
 			}
 		}
 		if (!request.getSenderProvidedResponseData().getRequestRejected().isEmpty()) {
+			log.info("Ответ содержит отказ Reject");
 			result.setKind(ResponseKind.RequestRejected);
+			// Ищем первоначальный запрос
+			MongoCollection<RequestMessage> requestCollection = messagesDB.getCollection(DocNames.RequestMessage, RequestMessage.class);
+			RequestMessage requestMessage = requestCollection.find(eq("Request.ReplyTo", result.getTo())).first();
+
+			//TODO Нужно сюда вкорячить поиск в БД корневого элемента, который не равен текущему и находится в одном namespace
+			result.setMpcKey(new MpcKey(requestMessage.getMpcNamespace(), requestMessage.getMpcRootElement().replace("Request", "Responce")));
+			//////////////////////////////////////////////////////////////
+
 		}
 		if (request.getSenderProvidedResponseData().getRequestStatus() != null) {
 			result.setKind(ResponseKind.RequestStatus);
@@ -209,6 +220,7 @@ public class SmevProcessingService {
 		if (requestMessage == null) {
 			throw new FailureWrapper("SMEV.RecipientIsNotFound.RequestNotFound");
 		}
+
 		String requestSenderMnemonic = requestMessage.getRequest().getMessageMetadata().getSender().getMnemonic();
 		SmevMember recipient = memberService.findMember(requestSenderMnemonic);
 		if (recipient == null) {
@@ -293,8 +305,8 @@ public class SmevProcessingService {
 	}
 
 	private void putFailure(SendRequestRequest src, RequestRoutingData routingData, FailureWrapper failure) {
-		log.info(routingData.getMessageMetadata().getSender().getMnemonic() + " : putFailure : ReplyTo = " + routingData.getReplyTo() + ", MpcKey = "
-		        + routingData.getMpcKey());
+		log.info("{} : putFailure : ReplyTo = {} , MpcKey = {}", routingData.getMessageMetadata().getSender().getMnemonic(), routingData.getReplyTo() , routingData.getMpcKey() );
+		log.info("{}", failure.getMessage());
 		Response response = new Response();
 		response.setId("ID_" + UUID.randomUUID());
 		response.setOriginalMessageId(src.getSenderProvidedRequestData().getMessageID());
@@ -321,10 +333,17 @@ public class SmevProcessingService {
 		metadata.setMessageType(MessageTypeType.RESPONSE);
 		metadata.setSender(ModelConstants.SMEV_AS_MEMBER.toSender());
 		metadata.setSendingTimestamp(datatypeFactory.newXMLGregorianCalendar(new GregorianCalendar()));
-		metadata.setRecipient(routingData.getMessageMetadata().getSender().toRecipient());
-		metadata.setSupplementaryData(new SupplementaryData());
-		metadata.getSupplementaryData().setInteractionType(InteractionTypeType.OTHER);
-		metadata.setDestinationName("TODO DestinationName");
+
+		MessageMetadata.Recipient recipient = new MessageMetadata.Recipient();
+		recipient.setHumanReadableName(routingData.getMessageMetadata().getSender().getHumanReadableName());
+		recipient.setMnemonic(routingData.getMessageMetadata().getSender().getMnemonic());
+
+		//metadata.setRecipient(routingData.getMessageMetadata().getSender().toRecipient());
+		metadata.setRecipient(recipient);
+
+		//metadata.setSupplementaryData(new SupplementaryData());
+		//metadata.getSupplementaryData().setInteractionType(InteractionTypeType.OTHER);
+		//metadata.setDestinationName("TODO DestinationName");
 		metadata.setStatus(InteractionStatusType.RESPONSE_IS_ACCEPTED_BY_SMEV);
 		response.setMessageMetadata(metadata);
 
@@ -345,6 +364,7 @@ public class SmevProcessingService {
 
 	public void putResponse(SendResponseRequest src, ResponseRoutingData __routingData, boolean async) throws FailureWrapper {
 		ResponseRoutingData routingData = SerializationUtils.clone(__routingData);
+
 		ProcessingTask task = new ProcessingTask(async) {
 			public void run() {
 				try {
@@ -379,6 +399,7 @@ public class SmevProcessingService {
 
 					MongoCollection<ResponseMessage> responseCollection = messagesDB.getCollection(DocNames.ResponseMessage, ResponseMessage.class);
 					responseCollection.insertOne(responseMessage);
+
 				} catch (FailureWrapper failure) {
 					setFailure(failure);
 					if (isAsync()) {
@@ -418,7 +439,12 @@ public class SmevProcessingService {
 		statusMessage.getAsyncProcessingStatusData().setId("ID_" + UUID.randomUUID());
 		statusMessage.getAsyncProcessingStatusData().setAsyncProcessingStatus(status);
 
-		statusMessage.setRecipient(routingData.getMessageMetadata().getSender().toRecipient());
+		MessageMetadata.Recipient recipient = new MessageMetadata.Recipient();
+		recipient.setHumanReadableName(routingData.getMessageMetadata().getSender().getHumanReadableName());
+		recipient.setMnemonic(routingData.getMessageMetadata().getSender().getMnemonic());
+
+		//statusMessage.setRecipient(routingData.getMessageMetadata().getSender().toRecipient());
+		statusMessage.setRecipient(recipient);
 
 		try {
 			signService.signSMEVSignature(statusMessage);
@@ -525,11 +551,5 @@ public class SmevProcessingService {
 			collection.updateOne(eq(FieldNames.docId, statusMessage.getDocId().toString()), new Document("$set", new Document(FieldNames.delivered, true)));
 		}
 		return statusMessage;
-	}
-
-	public List<QueueStatistics> getIncomingQueueStatistics(GetIncomingQueueStatisticsRequest request, SmevMember sender) {
-		List<QueueStatistics> result = new ArrayList<>();
-		// TODO
-		return result;
 	}
 }
